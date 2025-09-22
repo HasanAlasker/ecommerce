@@ -1,4 +1,4 @@
-import productModel from "../models/productModel";
+import productModel from "../models/productModel.js";
 
 export const getAllProducts = async () => {
   return await productModel.find();
@@ -38,7 +38,8 @@ export const deleteProduct = async ({ id }) => {
       throw new Error("Product not found");
     }
 
-    return deleteProduct;
+    return deletedProcuct;
+    
   } catch (error) {
     throw new Error(`Failed to delete product: ${error.message}`);
   }

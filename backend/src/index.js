@@ -1,6 +1,7 @@
 import express from "express";
 import mongoose from "mongoose";
 import usersRoute from './routers/usersRoute.js'
+import productsRoute from './routers/productsRoute.js'
 
 const app = express();
 const port = 3000;
@@ -13,6 +14,7 @@ mongoose
   .catch((error) => console.log("Failed to connect", error));
 
 app.use('/users', usersRoute)
+app.use('/products', productsRoute)
 
 app.listen(port, ()=>{
     console.log(`Server is running at port ${port}` )
