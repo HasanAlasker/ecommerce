@@ -135,5 +135,5 @@ cartSchema.methods.clearCart = function() {
   return this.save();
 };
 
-const cartModel = mongoose.model("Cart", cartSchema); // Use "Cart" not "cart"
+const cartModel = mongoose.model("cart", cartSchema); 
 export default cartModel;
