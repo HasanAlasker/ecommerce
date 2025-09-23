@@ -1,5 +1,5 @@
 import express from "express";
-import { getActiveCartForUser, addItemToCart } from "../services/cartServices.js";
+import { getActiveCartForUser, addItemToCart, updateItemInCart } from "../services/cartServices.js";
 import validateJWT from "../middlewares/validateJWT.js";
 
 const router = express.Router();
@@ -47,6 +47,13 @@ router.post("/items", async (req, res) => {
     console.error("Add to cart error:", error);
     res.status(500).json({ error: "Internal server error", details: error.message });
   }
+});
+
+router.put("/items", async (req, res) => {
+  const userId = req.user?._id
+  const {productId, quantity} = req.body
+  const response = await updateItemInCart({userId, productId, quantity})
+  res.status(response.statusCode).json(response.data);
 });
 
 export default router;
