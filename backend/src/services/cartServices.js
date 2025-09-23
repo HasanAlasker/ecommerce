@@ -1,7 +1,8 @@
 import cartModel from "../models/cartModel.js";
+import productModel from "../models/productModel.js";
 
 const createCartForUser = async ({ userId }) => {
-  const cart = await cartModel.create({ userId, totalAmount:0 });
+  const cart = await cartModel.create({ userId, totalAmount: 0 });
   return cart;
 };
 
@@ -13,4 +14,48 @@ export const getActiveCartForUser = async ({ userId }) => {
   }
 
   return cart;
+};
+
+export const addItemToCart = async ({ userId, productId, quantity = 1 }) => {
+  try {
+    let cart = await getActiveCartForUser({ userId });
+
+    const existsInCart = cart.items.find((p) => 
+      p.productId.toString() === productId.toString()
+    );
+
+    if (existsInCart) {
+      return { data: "Item already in cart", statusCode: 400 };
+    }
+
+    const product = await productModel.findById(productId);
+
+    if (!product) {
+      return { data: "Product does not exist", statusCode: 404 };
+    }
+
+    if (product.stock < quantity) {
+      return { data: "Insufficient stock", statusCode: 400 };
+    }
+
+    const subtotal = product.price * quantity;
+
+    // Add item with all required fields
+    cart.items.push({ 
+      productId, 
+      name: product.name,
+      image: product.image,
+      price: product.price,
+      quantity,
+      subtotal
+    });
+
+    const updatedCart = await cart.save();
+
+    return { data: updatedCart, statusCode: 200 };
+
+  } catch (error) {
+    console.error("Error in addItemToCart:", error);
+    return { data: "Internal server error", statusCode: 500 };
+  }
 };
