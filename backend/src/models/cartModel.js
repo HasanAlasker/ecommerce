@@ -54,7 +54,7 @@ const cartSchema = new mongoose.Schema({
   
   status: {
     type: String,
-    enum: ['active', 'abandoned', 'converted', 'expired'],
+    enum: ['active', 'abandoned', 'converted', 'expired', 'completed'],
     default: 'active'
   },
   

@@ -1,5 +1,7 @@
 import cartModel from "../models/cartModel.js";
+import orderModel from "../models/orderModel.js";
 import productModel from "../models/productModel.js";
+import usersModel from "../models/usersModel.js";
 
 const createCartForUser = async ({ userId }) => {
   const cart = await cartModel.create({ userId, totalAmount: 0 });
@@ -138,6 +140,70 @@ export const deleteItemInCart = async ({ userId, productId }) => {
     return { data: updatedCart, statusCode: 200 };
   } catch (error) {
     console.error("Error in deleteItemInCart:", error);
+    return { data: "Internal server error", statusCode: 500 };
+  }
+};
+
+export const checkout = async ({ userId }) => {
+  try {
+    const cart = await getActiveCartForUser({ userId });
+    
+    if (!cart.items || cart.items.length === 0) {
+      return { data: "Cart is empty", statusCode: 400 };
+    }
+
+    const user = await usersModel.findById(userId);
+    if (!user) {
+      return { data: "User not found", statusCode: 404 };
+    }
+
+    if (!user.address) {
+      return { data: "User address not found", statusCode: 400 };
+    }
+
+    const orderItems = [];
+
+    for (const item of cart.items) {
+      const product = await productModel.findById(item.productId);
+      if (!product) {
+        return { data: `Product ${item.name} not found`, statusCode: 400 };
+      }
+
+      if (product.stock < item.quantity) {
+        return { data: `Insufficient stock for ${product.name}`, statusCode: 400 };
+      }
+
+      const orderItem = {
+        productName: product.name,    // Changed from productTitle
+        productImage: product.image,
+        productQuantity: item.quantity, // Use cart item quantity, not product quantity
+        productPrice: product.price,
+      };
+
+      orderItems.push(orderItem);
+    }
+
+    const order = await orderModel.create({
+      orderItems,
+      userId,
+      total: cart.totalAmount,
+      address: user.address,
+    });
+
+    // Update product stock
+    for (const item of cart.items) {
+      await productModel.findByIdAndUpdate(item.productId, {
+        $inc: { stock: -item.quantity }
+      });
+    }
+
+    // Clear the cart after successful order creation
+    await clearCart({ userId });
+
+    return { data: order, statusCode: 200 };
+
+  } catch (error) {
+    console.error("Error in checkout:", error);
     return { data: "Internal server error", statusCode: 500 };
   }
 };

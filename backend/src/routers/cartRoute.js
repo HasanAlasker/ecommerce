@@ -4,7 +4,8 @@ import {
   addItemToCart,
   updateItemInCart,
   deleteItemInCart,
-  clearCart
+  clearCart,
+  checkout,
 } from "../services/cartServices.js";
 import validateJWT from "../middlewares/validateJWT.js";
 
@@ -73,6 +74,12 @@ router.delete("/items/:productId", async (req, res) => {
 router.delete("/", async (req, res) => {
   const userId = req.user?._id;
   const response = await clearCart({ userId });
+  res.status(response.statusCode).send(response.data);
+});
+
+router.post("/checkout", async (req, res) => {
+  const userId = req.user?._id;
+  const response = await checkout({ userId });
   res.status(response.statusCode).send(response.data);
 });
 
