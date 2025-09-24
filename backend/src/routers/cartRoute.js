@@ -58,29 +58,75 @@ router.post("/items", async (req, res) => {
 });
 
 router.put("/items", async (req, res) => {
-  const userId = req.user?._id;
-  const { productId, quantity } = req.body;
-  const response = await updateItemInCart({ userId, productId, quantity });
-  res.status(response.statusCode).json(response.data);
+  try {
+    if (!req.user?._id) {
+      return res.status(401).json({ error: "User not authenticated" });
+    }
+
+    const userId = req.user._id;
+    const { productId, quantity } = req.body;
+
+    if (!productId || !quantity) {
+      return res.status(400).json({ error: "Product ID and quantity are required" });
+    }
+
+    const response = await updateItemInCart({ userId, productId, quantity });
+    res.status(response.statusCode).json(response.data);
+  } catch (error) {
+    console.error("Update cart item error:", error);
+    res.status(500).json({ error: "Internal server error", details: error.message });
+  }
 });
 
 router.delete("/items/:productId", async (req, res) => {
-  const userId = req.user?._id;
-  const { productId } = req.params;
-  const response = await deleteItemInCart({ userId, productId });
-  res.status(response.statusCode).send(response.data);
+  try {
+    if (!req.user?._id) {
+      return res.status(401).json({ error: "User not authenticated" });
+    }
+
+    const userId = req.user._id;
+    const { productId } = req.params;
+
+    if (!productId) {
+      return res.status(400).json({ error: "Product ID is required" });
+    }
+
+    const response = await deleteItemInCart({ userId, productId });
+    res.status(response.statusCode).json(response.data);
+  } catch (error) {
+    console.error("Delete cart item error:", error);
+    res.status(500).json({ error: "Internal server error", details: error.message });
+  }
 });
 
 router.delete("/", async (req, res) => {
-  const userId = req.user?._id;
-  const response = await clearCart({ userId });
-  res.status(response.statusCode).send(response.data);
+  try {
+    if (!req.user?._id) {
+      return res.status(401).json({ error: "User not authenticated" });
+    }
+
+    const userId = req.user._id;
+    const response = await clearCart({ userId });
+    res.status(response.statusCode).json(response.data);
+  } catch (error) {
+    console.error("Clear cart error:", error);
+    res.status(500).json({ error: "Internal server error", details: error.message });
+  }
 });
 
 router.post("/checkout", async (req, res) => {
-  const userId = req.user?._id;
-  const response = await checkout({ userId });
-  res.status(response.statusCode).send(response.data);
+  try {
+    if (!req.user?._id) {
+      return res.status(401).json({ error: "User not authenticated" });
+    }
+
+    const userId = req.user._id;
+    const response = await checkout({ userId });
+    res.status(response.statusCode).json(response.data);
+  } catch (error) {
+    console.error("Checkout error:", error);
+    res.status(500).json({ error: "Internal server error", details: error.message });
+  }
 });
 
 export default router;
