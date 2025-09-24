@@ -21,6 +21,16 @@ export const getActiveCartForUser = async ({ userId }) => {
   return cart;
 };
 
+export const clearCart = async ({ userId }) => {
+  const cart = await getActiveCartForUser({ userId });
+
+  cart.items = [];
+  cart.totalAmount = 0;
+
+  const updatedCart = await cart.save();
+  return { data: updatedCart, statusCode: 200 };
+};
+
 export const addItemToCart = async ({ userId, productId, quantity = 1 }) => {
   try {
     let cart = await getActiveCartForUser({ userId });
