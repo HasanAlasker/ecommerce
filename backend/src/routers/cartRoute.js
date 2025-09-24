@@ -1,5 +1,5 @@
 import express from "express";
-import { getActiveCartForUser, addItemToCart, updateItemInCart } from "../services/cartServices.js";
+import { getActiveCartForUser, addItemToCart, updateItemInCart, deleteItemInCart } from "../services/cartServices.js";
 import validateJWT from "../middlewares/validateJWT.js";
 
 const router = express.Router();
@@ -55,5 +55,12 @@ router.put("/items", async (req, res) => {
   const response = await updateItemInCart({userId, productId, quantity})
   res.status(response.statusCode).json(response.data);
 });
+
+router.delete('/items/:productId', async (req, res) => {
+  const userId = req.user?._id
+  const {productId} = req.params
+  const response = await deleteItemInCart({userId, productId})
+  res.status(response.statusCode).send(response.data)
+})
 
 export default router;
