@@ -2,6 +2,8 @@ import express from "express";
 import jwt from "jsonwebtoken";
 import usersModel from "../models/usersModel.js";
 
+import('dotenv/config');
+
 const validateJWT = (req, res, next) => {
   // console.log("JWT Middleware triggered"); // Debug log
 
@@ -19,7 +21,7 @@ const validateJWT = (req, res, next) => {
     return res.status(403).json({ error: "Bearer token not found" });
   }
 
-  jwt.verify(token, "cyEZWvpsgpGNMtBKWxKqAkG57UIY482k", async (error, data) => {
+  jwt.verify(token, process.env.JWT_SECRET, async (error, data) => {
     if (error) {
       // console.log("JWT verification error:", error.message); // Debug log
       return res.status(403).json({ error: "Invalid token" });
