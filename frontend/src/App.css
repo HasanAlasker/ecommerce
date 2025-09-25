@@ -1,0 +1,107 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Inter", sans-serif;
+}
+:root {
+  --background: #fff9f2;
+  --black: #202020;
+  --white: #ffffff;
+  --gray: #a39e9e;
+  --primary: linear-gradient(
+    55deg,
+    rgb(252, 33, 124) 0%,
+    rgb(255, 78, 193) 185%
+  );
+  --purpleRGB: rgb(255, 0, 111);
+}
+html {
+  scroll-behavior: smooth;
+}
+body {
+  background-color: var(--background);
+}
+.small{
+
+}
+.mid{
+
+}
+.large{
+
+}
+.priColor{
+
+}
+.black{
+  
+}
+.gray{
+
+}
+
+/* ------------------ Card ---------------- */
+
+.productCard {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  background-color: var(--white);
+  padding: 1rem;
+  border-radius: 1rem;
+  width: 90%;
+  max-width: 340px;
+  margin: 0 auto;
+  gap: 1.5rem;
+
+  box-shadow: 0px 10px 20px -1px rgba(133, 133, 133, 0.75);
+  -webkit-box-shadow: 0px 10px 20px -1px rgba(98, 98, 98, 0.75);
+  -moz-box-shadow: 0px 10px 20px -1px rgba(107, 107, 107, 0.75);
+}
+.topCard {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: .5rem;
+}
+.imagePlaceholder {
+  background-color: var(--gray);
+  width: 100%;
+  aspect-ratio: 1/1;
+  border-radius: .6rem;
+  overflow: hidden;
+  margin-bottom: 1rem;
+}
+.productImage {
+  background-color: var(--gray);
+  width: 100%;
+  aspect-ratio: 1/1;
+  object-fit: cover;
+}
+.ctaCard{
+  display: flex;
+  gap: .5rem;
+}
+.priBtn {
+  width: 100%;
+  border: none;
+  color: var(--white);
+  background-color: var(--purpleRGB);
+  border: 2.3px solid var(--purpleRGB);
+  padding: 0.5rem;
+  border-radius: 1rem;
+  font-weight: bold;
+  flex: 2;
+}
+.secBtn {
+  width: 100%;
+  border: none;
+  color: var(--purpleRGB);
+  background-color: var(--white);
+  border: 2.3px solid var(--purpleRGB);
+  padding: 0.5rem;
+  border-radius: 1rem;
+  font-weight: bold;
+  flex: 1;
+}
