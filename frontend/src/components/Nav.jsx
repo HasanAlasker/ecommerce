@@ -38,7 +38,7 @@ function Nav({ onMenuOpen }) {
     <>
       <nav>
         <div className="nav-cont">
-          <a href="#home">
+          <a href="/">
             <img src={logo} className="logo" alt="logo"></img>
           </a>
           <div className="links"></div>
