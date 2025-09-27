@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 
 export default function Card({
-  productName,
-  productImage,
-  productPrice,
-  productStock,
+  name,
+  image,
+  price,
+  stock,
   quantity = 1,
   total,
   isAdmin = false,
@@ -24,10 +24,10 @@ export default function Card({
   }
   
   // Editing state
-  const [editName, setEditName] = useState(productName);
-  const [editPrice, setEditPrice] = useState(productPrice);
-  const [editStock, setEditStock] = useState(productStock);
-  const [editImage, setEditImage] = useState(productImage);
+  const [editName, setEditName] = useState(name);
+  const [editPrice, setEditPrice] = useState(price);
+  const [editStock, setEditStock] = useState(stock);
+  const [editImage, setEditImage] = useState(image);
 
   const handleSave = () => {
     if (onSave) {
@@ -42,10 +42,10 @@ export default function Card({
   };
 
   const handleCancel = () => {
-    setEditName(productName);
-    setEditPrice(productPrice);
-    setEditStock(productStock);
-    setEditImage(productImage);
+    setEditName(name);
+    setEditPrice(price);
+    setEditStock(stock);
+    setEditImage(image);
     setIsEditing(false);
   };
 
@@ -64,7 +64,7 @@ export default function Card({
 
   // Generate quantity options based on stock
   const quantityOptions = [];
-  for (let i = 1; i <= Math.min(productStock, 10); i++) {
+  for (let i = 1; i <= Math.min(stock, 10); i++) {
     quantityOptions.push(i);
   }
 
@@ -83,7 +83,7 @@ export default function Card({
           ) : (
             <img 
               className="productImage" 
-              src={productImage} 
+              src={image} 
               alt="product"
               onError={(e) => {
                 e.target.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjZGRkIi8+PHRleHQgeD0iNTAlIiB5PSI1MCUiIGZvbnQtc2l6ZT0iMTgiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGR5PSIuM2VtIiBmaWxsPSIjOTk5Ij5ObyBJbWFnZTwvdGV4dD48L3N2Zz4=';
@@ -100,7 +100,7 @@ export default function Card({
             className="editInput large priColor"
           />
         ) : (
-          <h2 className="large priColor">{productName}</h2>
+          <h2 className="large priColor">{name}</h2>
         )}
         
         {isAdmin && isEditing ? (
@@ -113,7 +113,7 @@ export default function Card({
           />
         ) : (
           <h2 className="mid priceText">
-            {productPrice} JD
+            {price} JD
           </h2>
         )}
         
@@ -126,7 +126,7 @@ export default function Card({
             min="0"
           />
         ) : (
-          <h2 className="gray small">In stock: {productStock}</h2>
+          <h2 className="gray small">In stock: {stock}</h2>
         )}
         
         {!isAdmin && cartPage && (

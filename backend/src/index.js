@@ -5,6 +5,7 @@ import usersRoute from './routers/usersRoute.js'
 import productsRoute from './routers/productsRoute.js'
 import cartRoute from './routers/cartRoute.js'
 import validateJWT from "./middlewares/validateJWT.js";
+import cors from 'cors'
 
 dotenv.config()
 
@@ -13,6 +14,7 @@ const port = 3000;
 
 // Body parser middleware - MUST be before routes
 app.use(express.json());
+app.use(cors())
 
 // Debug middleware to check if body is being parsed
 app.use((req, res, next) => {
