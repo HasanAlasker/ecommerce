@@ -16,7 +16,7 @@
     rgba(247, 89, 118, 1) 54%,
     rgb(248, 109, 135) 100%
   );
-  --purpleRGB: rgb(255, 0, 111);
+  --rgb: rgb(255, 0, 111);
 }
 html {
   scroll-behavior: smooth;
@@ -81,7 +81,7 @@ nav {
   border-radius: 50%;
 }
 .menu {
-  color: var(--purpleRGB);
+  color: var(--rgb);
   font-size: 1.8rem;
   cursor: pointer;
 }
@@ -115,7 +115,7 @@ nav {
   padding: 1rem;
   border-radius: 1rem;
   width: 100%;
-  max-width: 400px;
+  max-width: 350px;
   margin: 0 auto;
   gap: 1.5rem;
 
@@ -158,9 +158,9 @@ nav {
 .secBtn {
   width: 100%;
   border: none;
-  color: var(--purpleRGB);
+  color: var(--rgb);
   background-color: var(--white);
-  border: 2.3px solid var(--purpleRGB);
+  border: 2.3px solid var(--rgb);
   padding: 0.5rem;
   border-radius: 2rem;
   font-weight: bold;
@@ -198,4 +198,198 @@ nav {
   position: relative;
   width: 90%;
   margin: 2rem auto 6rem auto;
+}
+/* ------------Form------------ */
+
+.register-container {
+  min-height: 100vh;
+  background: var(--background);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.register-card {
+  background: var(--post);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 20px;
+  padding: 40px;
+  width: 100%;
+  max-width: 450px;
+  box-shadow: 0 15px 35px rgba(255, 56, 93, 0.1);
+}
+
+.register-header {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.flower-icon {
+  font-size: 3rem;
+  margin-bottom: 15px;
+}
+
+.register-title {
+  color: var(--black);
+  font-size: 2rem;
+  font-weight: 700;
+  margin: 0 0 10px 0;
+  background: var(--primary);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.register-subtitle {
+  color: var(--gray);
+  font-size: 0.95rem;
+  margin: 0;
+}
+
+.register-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.form-label {
+  color: var(--black);
+  font-size: 0.9rem;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.form-input {
+  padding: 15px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-radius: 12px;
+  background: var(--white);
+  color: var(--black);
+  font-size: 1rem;
+  transition: all 0.3s ease;
+}
+
+.form-input:focus {
+  outline: none;
+  border-color: var(--rgb);
+  box-shadow: 0 0 0 3px rgba(255, 56, 93, 0.1);
+}
+
+.form-input.error {
+  border-color: #ff4757;
+  box-shadow: 0 0 0 3px rgba(255, 71, 87, 0.1);
+}
+
+.form-input::placeholder {
+  color: var(--gray);
+}
+
+.error-message {
+  color: #ff4757;
+  font-size: 0.85rem;
+  margin-top: 5px;
+  font-weight: 500;
+}
+
+.submit-button {
+  padding: 16px;
+  background: var(--primary);
+  color: var(--white);
+  border: none;
+  border-radius: 12px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-top: 10px;
+}
+
+.submit-button:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(255, 56, 93, 0.3);
+}
+
+.submit-button:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.submit-button.loading {
+  position: relative;
+}
+
+.form-footer {
+  text-align: center;
+  margin-top: 25px;
+}
+
+.form-footer p {
+  color: var(--gray);
+  font-size: 0.9rem;
+  margin: 0;
+}
+
+.link {
+  color: var(--rgb);
+  text-decoration: none;
+  font-weight: 600;
+  transition: opacity 0.3s ease;
+}
+
+.link:hover {
+  opacity: 0.8;
+}
+
+.form-extras {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 10px 0;
+}
+
+.remember-me {
+  display: flex;
+  align-items: center;
+  color: var(--black);
+  font-size: 0.9rem;
+  cursor: pointer;
+  position: relative;
+}
+
+.remember-me input[type="checkbox"] {
+  margin-right: 8px;
+  width: 16px;
+  height: 16px;
+  accent-color: var(--rgb);
+}
+
+.forgot-password {
+  color: var(--rgb);
+  text-decoration: none;
+  font-size: 0.9rem;
+  font-weight: 500;
+  transition: opacity 0.3s ease;
+}
+
+.forgot-password:hover {
+  opacity: 0.8;
+}
+
+@media (max-width: 480px) {
+  .register-card {
+    padding: 30px 20px;
+  }
+  
+  .register-title {
+    font-size: 1.7rem;
+  }
 }

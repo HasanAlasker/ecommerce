@@ -14,15 +14,15 @@ export default function Card({
   onDelete,
   onAddToCart,
   onRemove,
-  onQuantityChange
+  onQuantityChange,
 }) {
   const [isEditing, setIsEditing] = useState(false);
   const [isAdding, setIsAdding] = useState(false);
   const [selectedQuantity, setSelectedQuantity] = useState(quantity);
-  if(isAdding){
-    console.log('d')
+  if (isAdding) {
+    console.log("d");
   }
-  
+
   // Editing state
   const [editName, setEditName] = useState(name);
   const [editPrice, setEditPrice] = useState(price);
@@ -35,7 +35,7 @@ export default function Card({
         name: editName,
         price: editPrice,
         stock: editStock,
-        image: editImage
+        image: editImage,
       });
     }
     setIsEditing(false);
@@ -81,17 +81,18 @@ export default function Card({
               className="imageInput"
             />
           ) : (
-            <img 
-              className="productImage" 
-              src={image} 
+            <img
+              className="productImage"
+              src={image}
               alt="product"
               onError={(e) => {
-                e.target.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjZGRkIi8+PHRleHQgeD0iNTAlIiB5PSI1MCUiIGZvbnQtc2l6ZT0iMTgiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGR5PSIuM2VtIiBmaWxsPSIjOTk5Ij5ObyBJbWFnZTwvdGV4dD48L3N2Zz4=';
+                e.target.src =
+                  "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjZGRkIi8+PHRleHQgeD0iNTAlIiB5PSI1MCUiIGZvbnQtc2l6ZT0iMTgiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGR5PSIuM2VtIiBmaWxsPSIjOTk5Ij5ObyBJbWFnZTwvdGV4dD48L3N2Zz4=";
               }}
             />
           )}
         </div>
-        
+
         {isAdmin && isEditing ? (
           <input
             type="text"
@@ -102,7 +103,7 @@ export default function Card({
         ) : (
           <h2 className="large priColor">{name}</h2>
         )}
-        
+
         {isAdmin && isEditing ? (
           <input
             type="number"
@@ -112,11 +113,9 @@ export default function Card({
             step="0.01"
           />
         ) : (
-          <h2 className="mid priceText">
-            {price} JD
-          </h2>
+          <h2 className="mid priceText">{price} JD</h2>
         )}
-        
+
         {isAdmin && isEditing ? (
           <input
             type="number"
@@ -125,10 +124,10 @@ export default function Card({
             className="editInput small gray"
             min="0"
           />
-        ) : (
+        ) : isAdmin && !isEditing ? (
           <h2 className="gray small">In stock: {stock}</h2>
-        )}
-        
+        ) : null}
+
         {!isAdmin && cartPage && (
           <>
             <h2 className="gray small">Quantity: {quantity}</h2>
@@ -168,8 +167,10 @@ export default function Card({
             onChange={(e) => handleQuantityChange(Number(e.target.value))}
             className="secBtn small"
           >
-            {quantityOptions.map(num => (
-              <option key={num} value={num}>{num}</option>
+            {quantityOptions.map((num) => (
+              <option key={num} value={num}>
+                {num}
+              </option>
             ))}
           </select>
         ) : !isAdmin && cartPage ? (
@@ -178,8 +179,10 @@ export default function Card({
             onChange={(e) => handleQuantityChange(Number(e.target.value))}
             className="secBtn small"
           >
-            {quantityOptions.map(num => (
-              <option key={num} value={num}>{num}</option>
+            {quantityOptions.map((num) => (
+              <option key={num} value={num}>
+                {num}
+              </option>
             ))}
           </select>
         ) : isAdmin && isEditing ? (
