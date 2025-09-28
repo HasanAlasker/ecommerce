@@ -2,10 +2,14 @@ import React, { useEffect, useState } from "react";
 import Card from "../components/Card";
 import Banner from "../components/Banner";
 import { BASE_URL } from "../constants/baseUrl";
+import { useAuth } from "../context/AuthContext";
 
 export default function Home() {
   const [products, setProducts] = useState([]);
   const [error, setError] = useState(false);
+  const {user} = useAuth()
+
+  const isAdmin = user && user.role === 'admin'
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -37,8 +41,9 @@ export default function Home() {
         <h2 style={{textAlign:'center', color:'#a39e9e'}}>There are no products to show!</h2>
       ) : (
         <div className="card-cont">
+          {isAdmin && <Card addCard isAdmin />}
           {products.map((p) => (
-            <Card key={p._id} id={p._id} {...p} />
+            <Card key={p._id} id={p._id} {...p}/>
           ))}
         </div>
       )}

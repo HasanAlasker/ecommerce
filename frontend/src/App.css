@@ -199,7 +199,7 @@ nav {
 
 .card-cont {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
   gap: 2.5rem;
   position: relative;
   width: 90%;
@@ -415,4 +415,11 @@ nav {
   .register-title {
     font-size: 1.7rem;
   }
+}
+
+@media (min-width: 1120px) {
+  .card-cont {
+  grid-template-columns: repeat(auto-fit, minmax(19rem, 1fr));
+  
+}
 }

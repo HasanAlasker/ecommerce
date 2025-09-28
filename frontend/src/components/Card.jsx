@@ -7,7 +7,7 @@ export default function Card({
   stock,
   quantity = 1,
   total,
-  isAdmin = false,
+  isAdmin,
   cartPage = false,
   addCard = false,
   onSave,
@@ -180,7 +180,7 @@ export default function Card({
       );
     }
 
-    if (isAdmin && !isEditing) {
+    if (isAdmin && !isEditing || !addCard) {
       return <h2 className="gray small">In stock: {stock}</h2>;
     }
 
