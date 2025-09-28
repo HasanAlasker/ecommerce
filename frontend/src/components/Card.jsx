@@ -7,7 +7,7 @@ export default function Card({
   stock,
   quantity = 1,
   total,
-  isAdmin = true,
+  isAdmin = false,
   cartPage = false,
   addCard = false,
   onSave,
@@ -80,7 +80,7 @@ export default function Card({
 
   // Render functions for different sections
   const renderImage = () => {
-    if (isAdmin && isEditing) {
+    if (isAdmin && isEditing || addCard) {
       return (
         <input
           type="url"
@@ -106,12 +106,13 @@ export default function Card({
   };
 
   const renderName = () => {
-    if (isAdmin && isEditing) {
+    if (isAdmin && isEditing || addCard) {
       return (
         <input
           type="text"
           value={editName}
           onChange={(e) => setEditName(e.target.value)}
+          placeholder="Name"
           className="editInput large priColor"
         />
       );
@@ -121,7 +122,7 @@ export default function Card({
   };
 
   const renderPrice = () => {
-    if (isAdmin && isEditing) {
+    if (isAdmin && isEditing || addCard) {
       return (
         <>
           <input
@@ -166,12 +167,13 @@ export default function Card({
   };
 
   const renderStock = () => {
-    if (isAdmin && isEditing) {
+    if (isAdmin && isEditing || addCard) {
       return (
         <input
           type="number"
           value={editStock}
           onChange={(e) => setEditStock(Number(e.target.value))}
+          placeholder="Stock"
           className="editInput small gray"
           min="0"
         />

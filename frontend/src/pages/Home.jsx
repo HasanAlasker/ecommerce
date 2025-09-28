@@ -6,6 +6,7 @@ import { BASE_URL } from "../constants/baseUrl";
 export default function Home() {
   const [products, setProducts] = useState([]);
   const [error, setError] = useState(false);
+  const isAdmin = false
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -33,10 +34,12 @@ export default function Home() {
   return (
     <>
       <Banner></Banner>
+      
       {products.length === 0 ? (
         <h2 style={{textAlign:'center', color:'#a39e9e'}}>There are no products to show!</h2>
       ) : (
         <div className="card-cont">
+          {isAdmin && <Card addCard />}
           {products.map((p) => (
             <Card key={p._id} id={p._id} {...p} />
           ))}
