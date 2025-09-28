@@ -29,6 +29,7 @@ const validationSchema = Yup.object({
 });
 
 export default function Register() {
+  
   const handleSubmit = async (values, { setSubmitting, setStatus }) => {
     try {
       setStatus(null); // Clear any previous status

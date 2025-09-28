@@ -28,13 +28,13 @@ export default function Home() {
   }, []);
 
   if (error) {
-    return <h2>Something went wrong, please try refreshing the page!</h2>;
+    return <h2 style={{textAlign:'center', color:'#a39e9e'}} >Something went wrong, please try refreshing the page!</h2>;
   }
   return (
     <>
       <Banner></Banner>
       {products.length === 0 ? (
-        <h2>There are no products to show!</h2>
+        <h2 style={{textAlign:'center', color:'#a39e9e'}}>There are no products to show!</h2>
       ) : (
         <div className="card-cont">
           {products.map((p) => (
