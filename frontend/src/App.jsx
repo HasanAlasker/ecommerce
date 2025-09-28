@@ -4,10 +4,12 @@ import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Nav from "./components/Nav";
 import Register from "./pages/Register";
+import AuthProvider from "./context/AuthProvider";
 
 function App() {
   return (
-    <BrowserRouter>
+    <AuthProvider>
+      <BrowserRouter>
     <Nav></Nav>
       <Routes >
         <Route path="/" element={<Home/>}/>
@@ -15,6 +17,8 @@ function App() {
         <Route path="/register" element={<Register/>}/>
       </Routes>
     </BrowserRouter>
+    </AuthProvider>
+    
   );
 }
 

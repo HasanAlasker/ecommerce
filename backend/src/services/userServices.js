@@ -1,5 +1,4 @@
 import('dotenv/config');
-
 import usersModel from "../models/usersModel.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
@@ -25,16 +24,30 @@ export const register = async ({
     phone,
     address,
   });
-  await newUser.save();
+  
+  const savedUser = await newUser.save();
+  
+  // Create user object without password
+  const userResponse = {
+    id: savedUser._id,
+    fullName: savedUser.fullName,
+    email: savedUser.email,
+    phone: savedUser.phone,
+    address: savedUser.address
+  };
 
-  return { data: generateJWT({ fullName, email }), statusCode: 200 };
+  return { 
+    data: generateJWT({ id: savedUser._id, fullName, email }), 
+    user: userResponse,
+    statusCode: 200 
+  };
 };
 
 export const login = async ({ email, password }) => {
   const findUser = await usersModel.findOne({ email });
 
   if (!findUser) {
-    return { data: "User doesn't exist", statusCode: 200 };
+    return { data: "User doesn't exist", statusCode: 400 };
   }
 
   const passwordMatch = await bcrypt.compare(password, findUser.password);
@@ -43,8 +56,18 @@ export const login = async ({ email, password }) => {
     return { data: "Incorrect email or password", statusCode: 400 };
   }
 
+  // Create user object without password
+  const userResponse = {
+    id: findUser._id,
+    fullName: findUser.fullName,
+    email: findUser.email,
+    phone: findUser.phone,
+    address: findUser.address
+  };
+
   return {
-    data: generateJWT({ fullName: findUser.fullName, email }),
+    data: generateJWT({ id: findUser._id, fullName: findUser.fullName, email }),
+    user: userResponse,
     statusCode: 200,
   };
 };

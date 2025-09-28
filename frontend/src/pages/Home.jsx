@@ -2,11 +2,12 @@ import React, { useEffect, useState } from "react";
 import Card from "../components/Card";
 import Banner from "../components/Banner";
 import { BASE_URL } from "../constants/baseUrl";
+import { useAuth } from "../context/AuthContext";
 
 export default function Home() {
   const [products, setProducts] = useState([]);
   const [error, setError] = useState(false);
-  const isAdmin = false
+  const {user} = useAuth()
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -34,12 +35,11 @@ export default function Home() {
   return (
     <>
       <Banner></Banner>
-      
+      {user && <h1>{user.fullName}</h1>}
       {products.length === 0 ? (
         <h2 style={{textAlign:'center', color:'#a39e9e'}}>There are no products to show!</h2>
       ) : (
         <div className="card-cont">
-          {isAdmin && <Card addCard />}
           {products.map((p) => (
             <Card key={p._id} id={p._id} {...p} />
           ))}

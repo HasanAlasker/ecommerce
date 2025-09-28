@@ -45,6 +45,9 @@ body {
 .gray {
   color: var(--gray);
 }
+a{
+  text-decoration: none;
+}
 
 /* ------------------ Navbar ---------------- */
 
@@ -155,17 +158,19 @@ nav {
   border-radius: 2rem;
   font-weight: bold;
   flex: 2;
+  cursor: pointer;
 }
 .secBtn {
   width: 100%;
   border: none;
   color: var(--rgb);
   background-color: var(--white);
-  border: 2.3px solid var(--rgb);
+  border: 2.5px solid var(--rgb);
   padding: 0.5rem;
   border-radius: 2rem;
   font-weight: bold;
   flex: 1;
+  cursor: pointer;
 }
 .imageInput {
   width: 100%;

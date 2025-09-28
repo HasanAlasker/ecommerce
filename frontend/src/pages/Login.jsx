@@ -1,6 +1,8 @@
 import React from 'react';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 
 const validationSchema = Yup.object({
   email: Yup.string()
@@ -12,12 +14,25 @@ const validationSchema = Yup.object({
 });
 
 export default function Login() {
-  const handleSubmit = (values, { setSubmitting }) => {
-    console.log('Login values:', values);
-    setTimeout(() => {
-      alert('Login successful!');
-      setSubmitting(false);
-    }, 1000);
+  const { login, loading } = useAuth();
+  const navigate = useNavigate();
+
+  const handleSubmit = async (values, { setSubmitting, setStatus }) => {
+    try {
+      console.log("Login button clicked");
+      const result = await login(values.email, values.password);
+      
+      if (result.success) {
+        setStatus({ type: "success", message: "Login successful!" });
+        navigate("/");
+      } else {
+        setStatus({ type: "error", message: result.error });
+      }
+    } catch (error) {
+      console.error("Login error:", error);
+      setStatus({ type: "error", message: "Login failed" });
+    }
+    setSubmitting(false);
   };
 
   return (
@@ -38,7 +53,7 @@ export default function Login() {
           validationSchema={validationSchema}
           onSubmit={handleSubmit}
         >
-          {({ isSubmitting, touched, errors }) => (
+          {({ isSubmitting, touched, errors, status }) => (
             <Form className="register-form">
               <div className="form-group">
                 <label htmlFor="email" className="form-label">Email Address</label>
@@ -73,12 +88,22 @@ export default function Login() {
                 <a href="#" className="forgot-password">Forgot Password?</a>
               </div>
 
+              {status && (
+                <div
+                  className={`status-message ${
+                    status.type === "error" ? "error-status" : "success-status"
+                  }`}
+                >
+                  {status.message}
+                </div>
+              )}
+
               <button
                 type="submit"
-                disabled={isSubmitting}
-                className={`submit-button ${isSubmitting ? 'loading' : ''}`}
+                disabled={isSubmitting || loading}
+                className={`submit-button ${isSubmitting || loading ? 'loading' : ''}`}
               >
-                {isSubmitting ? 'Signing In...' : 'Sign In'}
+                {(isSubmitting || loading) ? 'Signing In...' : 'Sign In'}
               </button>
 
               <div className="form-footer">

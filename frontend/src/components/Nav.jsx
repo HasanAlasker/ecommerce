@@ -1,6 +1,6 @@
 import logo from "../assets/pics/navLogo.png";
 
-function Nav({ onMenuOpen }) {
+function Nav() {
   //   const [activeSection, setActiveSection] = useState("home");
 
   //   useEffect(() => {
@@ -41,10 +41,25 @@ function Nav({ onMenuOpen }) {
           <a href="/">
             <img src={logo} className="logo" alt="logo"></img>
           </a>
-          <div className="links"></div>
-          <span className="material-symbols-outlined menu" onClick={onMenuOpen}>
-            dehaze
-          </span>
+
+          <a href="/login">
+            <div className="secBtn" style={{display:'flex', alignItems:'center', gap:'.5rem'}}>
+              <span className="small priColor">Login</span>
+              <span className="material-symbols-outlined priColor large">person</span>
+            </div>
+          </a>
+          <a href="/orders">
+            <div className="secBtn" style={{display:'flex', alignItems:'center', gap:'.5rem'}}>
+              <span className="small priColor">Orders</span>
+              <span className="material-symbols-outlined priColor large">receipt</span>
+            </div>
+          </a>
+          <a href="/cart">
+            <div className="secBtn" style={{display:'flex', alignItems:'center', gap:'.5rem'}}>
+              <span className="small priColor">Cart</span>
+              <span className="material-symbols-outlined priColor large">shopping_cart</span>
+            </div>
+          </a>
         </div>
       </nav>
     </>

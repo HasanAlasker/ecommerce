@@ -1,7 +1,8 @@
 import React from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
-import { BASE_URL } from "../constants/baseUrl";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
 
 const validationSchema = Yup.object({
   fullName: Yup.string()
@@ -29,55 +30,27 @@ const validationSchema = Yup.object({
 });
 
 export default function Register() {
-  
+  const { register, loading } = useAuth();
+  const navigate = useNavigate();
+
   const handleSubmit = async (values, { setSubmitting, setStatus }) => {
-    try {
-      setStatus(null); // Clear any previous status
+    const result = await register({
+      fullName: values.fullName,
+      email: values.email,
+      password: values.password,
+      address: values.address,
+      phone: values.phone,
+    });
 
-      const response = await fetch(`${BASE_URL}/users/register`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          fullName: values.fullName,
-          email: values.email,
-          password: values.password,
-          address: values.address,
-          phone: values.phone,
-        }),
-      });
-
-      const data = await response.json();
-
-      if (response.ok) {
-        console.log("Registration successful:", data);
-        alert("Registration submitted successfully!");
-        setStatus({ type: "success", message: "Registration successful!" });
-        
-      } else {
-        console.error("Registration failed:", data);
-        // Handle different error response formats
-        let errorMessage = "Registration failed";
-
-        if (data.error) {
-          errorMessage = data.error;
-        } else if (data.message) {
-          errorMessage = data.message;
-        } else if (typeof data === "string") {
-          errorMessage = data;
-        } else if (data.details) {
-          errorMessage = data.details;
-        }
-
-        setStatus({ type: "error", message: errorMessage });
-      }
-    } catch (error) {
-      console.error("Network error:", error);
-      setStatus({ type: "error", message: "Network error. Please try again." });
-    } finally {
-      setSubmitting(false);
+    if (result.success) {
+      setStatus({ type: "success", message: "Registration successful!" });
+      // Redirect to home page (user is now logged in automatically)
+      setTimeout(() => navigate("/"), 1500);
+    } else {
+      setStatus({ type: "error", message: result.error });
     }
+    
+    setSubmitting(false);
   };
 
   return (
@@ -203,6 +176,7 @@ export default function Register() {
                   className="error-message"
                 />
               </div>
+              
               {status && (
                 <div
                   className={`status-message ${
@@ -212,12 +186,13 @@ export default function Register() {
                   {status.message}
                 </div>
               )}
+              
               <button
                 type="submit"
-                disabled={isSubmitting}
-                className={`submit-button ${isSubmitting ? "loading" : ""}`}
+                disabled={isSubmitting || loading}
+                className={`submit-button ${isSubmitting || loading ? "loading" : ""}`}
               >
-                {isSubmitting ? "Creating Account..." : "Create Account"}
+                {(isSubmitting || loading) ? "Creating Account..." : "Create Account"}
               </button>
 
               <div className="form-footer">
