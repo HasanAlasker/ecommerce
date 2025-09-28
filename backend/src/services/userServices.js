@@ -23,21 +23,28 @@ export const register = async ({
     password: hashedPassword,
     phone,
     address,
+    // role will use default 'user' from schema
   });
   
   const savedUser = await newUser.save();
   
-  // Create user object without password
+  // Create user object without password - INCLUDE ROLE
   const userResponse = {
     id: savedUser._id,
     fullName: savedUser.fullName,
     email: savedUser.email,
     phone: savedUser.phone,
-    address: savedUser.address
+    address: savedUser.address,
+    role: savedUser.role // ADD THIS LINE
   };
 
   return { 
-    data: generateJWT({ id: savedUser._id, fullName, email }), 
+    data: generateJWT({ 
+      id: savedUser._id, 
+      fullName: savedUser.fullName, 
+      email: savedUser.email,
+      role: savedUser.role // ADD ROLE TO JWT
+    }), 
     user: userResponse,
     statusCode: 200 
   };
@@ -56,17 +63,23 @@ export const login = async ({ email, password }) => {
     return { data: "Incorrect email or password", statusCode: 400 };
   }
 
-  // Create user object without password
+  // Create user object without password - INCLUDE ROLE
   const userResponse = {
     id: findUser._id,
     fullName: findUser.fullName,
     email: findUser.email,
     phone: findUser.phone,
-    address: findUser.address
+    address: findUser.address,
+    role: findUser.role // ADD THIS LINE
   };
 
   return {
-    data: generateJWT({ id: findUser._id, fullName: findUser.fullName, email }),
+    data: generateJWT({ 
+      id: findUser._id, 
+      fullName: findUser.fullName, 
+      email: findUser.email,
+      role: findUser.role // ADD ROLE TO JWT
+    }),
     user: userResponse,
     statusCode: 200,
   };

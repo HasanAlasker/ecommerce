@@ -30,9 +30,9 @@ const AuthProvider = ({children}) => {
                 console.log("✅ Login successful, setting user");
                 console.log("🔍 Full response data structure:", data);
                 
-                // Check different possible response structures
-                const token = data.token || data.accessToken || data.authToken;
-                const user = data.user || data.userData || data;
+                // Handle the fixed backend structure
+                const token = data.token;
+                const user = data.user;
                 
                 console.log("🔍 Extracted values:", { token, user });
                 
@@ -41,9 +41,18 @@ const AuthProvider = ({children}) => {
                     return { success: false, error: 'No authentication token received' };
                 }
                 
-                if (!user || (!user.fullName && !user.name)) {
+                if (!user) {
                     console.error("❌ No user data found in response");
                     return { success: false, error: 'No user data received' };
+                }
+                
+                // Set state first
+                setUser(user)
+                setToken(token)
+                
+                if (!token) {
+                    console.error("❌ No token found in response");
+                    return { success: false, error: 'No authentication token received' };
                 }
                 
                 // Set state first
@@ -95,7 +104,15 @@ const AuthProvider = ({children}) => {
                 
                 // Check different possible response structures
                 const token = data.token || data.accessToken || data.authToken;
-                const user = data.user || data.userData || data;
+                let user = data.user || data.userData || data;
+                
+                // Ensure user has a role (default to 'user' if not provided)
+                if (user && typeof user === 'object') {
+                    user = {
+                        ...user,
+                        role: user.role || 'user' // Default role
+                    };
+                }
                 
                 console.log("🔍 Extracted registration values:", { token, user });
                 
@@ -159,7 +176,16 @@ const AuthProvider = ({children}) => {
             
             if (storedToken && storedUser) {
                 console.log("✅ Restoring user from localStorage");
-                const parsedUser = JSON.parse(storedUser)
+                let parsedUser = JSON.parse(storedUser)
+                
+                // Ensure restored user has a role
+                if (parsedUser && typeof parsedUser === 'object') {
+                    parsedUser = {
+                        ...parsedUser,
+                        role: parsedUser.role || 'user' // Default role if missing
+                    };
+                }
+                
                 setToken(storedToken)
                 setUser(parsedUser)
                 console.log("👤 User restored:", parsedUser);
