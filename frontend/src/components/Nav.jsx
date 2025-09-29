@@ -60,8 +60,8 @@ function Nav() {
                     gap: ".5rem",
                   }}
                 >
-                  <span className="small priColor">Login</span>
-                  <span className="material-symbols-outlined priColor large">
+                  <span className="priColor extraSmall">Login</span>
+                  <span className="material-symbols-outlined priColor smallIcon">
                     person
                   </span>
                 </div>
@@ -77,8 +77,8 @@ function Nav() {
                     gap: ".5rem",
                   }}
                 >
-                  <span className="small priColor">Orders</span>
-                  <span className="material-symbols-outlined priColor large">
+                  <span className="priColor extraSmall">Orders</span>
+                  <span className="material-symbols-outlined priColor smallIcon">
                     receipt
                   </span>
                 </div>
@@ -94,8 +94,8 @@ function Nav() {
                     gap: ".5rem",
                   }}
                 >
-                  <span className="small priColor">Cart</span>
-                  <span className="material-symbols-outlined priColor large">
+                  <span className="priColor extraSmall">Cart</span>
+                  <span className="material-symbols-outlined priColor smallIcon">
                     shopping_cart
                   </span>
                 </div>
@@ -115,8 +115,8 @@ function Nav() {
                     gap: ".5rem",
                   }}
                 >
-                  <span className="small priColor">Logout</span>
-                  <span className="material-symbols-outlined priColor large">
+                  <span className="priColor extraSmall">Logout</span>
+                  <span className="material-symbols-outlined priColor smallIcon">
                     logout
                   </span>
                 </div>
