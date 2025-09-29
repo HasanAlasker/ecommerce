@@ -176,7 +176,7 @@ nav {
 }
 .priBtn:hover {
   transform: translateY(-3px);
-  box-shadow: 0px 16px 21px -8px rgba(190, 190, 190, 0.75);
+  box-shadow: 0 5px 15px rgba(255, 56, 93, 0.4);
 }
 .secBtn {
   width: 100%;
@@ -193,7 +193,7 @@ nav {
 }
 .secBtn:hover {
   transform: translateY(-3px);
-  box-shadow: 0px 16px 21px -8px rgba(190, 190, 190, 0.75);
+  box-shadow: 0 5px 15px rgba(255, 56, 93, 0.4);
 }
 .imageInput {
   width: 100%;
