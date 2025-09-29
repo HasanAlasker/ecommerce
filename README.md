@@ -1,4 +1,4 @@
-# 🌺 Petal & Stem
+# <img src='./frontend/src/assets/pics/navLogo.png' width="45"> Petal & Stem
 
 > *"Flowers that never fade."*
 
@@ -69,6 +69,6 @@ This project is Closed source.
 - Company: Alasker Technologies
 
 ---
-
-<p align="center">Made by <a href="https://alasker.dev">Alasker Technologies</a></p>
-<p align="center">🌸 Flowers that never fade 🌸</p>
+> <img src='./frontend/src/assets/pics/alasker.png' width="120">
+<p >Made by <a href="https://alasker.dev">Alasker Technologies</a></p>
+<p >🌸 Flowers that never fade 🌸</p>
