@@ -1,6 +1,67 @@
 import React, { useState } from "react";
+import { BASE_URL } from "../constants/baseUrl";
+
+const createProduct = async (data) => {
+  try {
+    const response = await fetch(`${BASE_URL}/products`, {
+      method: "POST",
+      body: JSON.stringify(data),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    return await response.json();
+  } catch (error) {
+    console.error("Error creating Product:", error);
+    throw error;
+  }
+};
+
+const deleteProduct = async (id) => {
+  try {
+    const response = await fetch(`${BASE_URL}/products/${id}`, {
+      method: "DELETE",
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    return await response.json();
+  } catch (error) {
+    console.error("Error deleting Product:", error);
+    throw error;
+  }
+};
+
+const updateProduct = async (id, data) => {
+  try {
+    const response = await fetch(`${BASE_URL}/products/${id}`, {
+      method: "PUT",
+      body: JSON.stringify(data),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    return await response.json();
+  } catch (error) {
+    console.error("Error updating Product:", error);
+    throw error;
+  }
+};
 
 export default function Card({
+  id,
   name,
   image,
   price,
@@ -15,39 +76,111 @@ export default function Card({
   onAddToCart,
   onRemove,
   onQuantityChange,
-  discountedPrice
+  discountedPrice,
+  onProductAdded
 }) {
   const [isEditing, setIsEditing] = useState(false);
   const [selectedQuantity, setSelectedQuantity] = useState(quantity);
+  const [isLoading, setIsLoading] = useState(false);
 
-  // Editing state
-  const [editName, setEditName] = useState(name);
-  const [editPrice, setEditPrice] = useState(price);
-  const [editDiscountedPrice, setEditDiscountedPrice] = useState(discountedPrice);
-  const [editStock, setEditStock] = useState(stock);
-  const [editImage, setEditImage] = useState(image);
+  const [editName, setEditName] = useState(name || '');
+  const [editPrice, setEditPrice] = useState(price || '');
+  const [editDiscountedPrice, setEditDiscountedPrice] = useState(discountedPrice || '');
+  const [editStock, setEditStock] = useState(stock || '');
+  const [editImage, setEditImage] = useState(image || '');
 
-  // Helper functions
-  const handleSave = () => {
-    if (onSave) {
-      onSave({
-        name: editName,
-        price: editPrice,
-        discountedPrice: editDiscountedPrice,
-        stock: editStock,
-        image: editImage,
-      });
+  const handleSave = async () => {
+    if (!editName || !editPrice || !editStock) {
+      alert('Please fill in all required fields (name, price, stock)');
+      return;
     }
-    setIsEditing(false);
+
+    setIsLoading(true);
+    try {
+      const productData = {
+        name: editName,
+        price: Number(editPrice),
+        stock: Number(editStock),
+        image: editImage,
+        ...(editDiscountedPrice && { discountedPrice: Number(editDiscountedPrice) })
+      };
+
+      if (addCard) {
+        const newProduct = await createProduct(productData);
+        console.log('Product created:', newProduct);
+        
+        alert('Product added successfully!');
+        
+        if (onProductAdded) {
+          onProductAdded(newProduct);
+        }
+        
+        setEditName('');
+        setEditPrice('');
+        setEditDiscountedPrice('');
+        setEditStock('');
+        setEditImage('');
+        
+      } else {
+        const updatedProduct = await updateProduct(id, productData);
+        console.log('Product updated:', updatedProduct);
+        
+        alert('Product updated successfully!');
+        
+        if (onSave) {
+          onSave(updatedProduct);
+        }
+        
+        setIsEditing(false);
+      }
+    } catch (error) {
+      console.error('Error saving product:', error);
+      alert('Failed to save product. Please try again.');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleDelete = async () => {
+    const confirmed = window.confirm(
+      `Are you sure you want to delete "${name}"? This action cannot be undone.`
+    );
+    
+    if (!confirmed) {
+      return;
+    }
+
+    setIsLoading(true);
+    try {
+      await deleteProduct(id);
+      alert('Product deleted successfully!');
+      
+      if (onDelete) {
+        onDelete();
+      }
+    } catch (error) {
+      console.error('Error deleting product:', error);
+      alert('Failed to delete product. Please try again.');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const handleCancel = () => {
-    setEditName(name);
-    setEditPrice(price);
-    setEditDiscountedPrice(discountedPrice);
-    setEditStock(stock);
-    setEditImage(image);
-    setIsEditing(false);
+    if (addCard) {
+      setEditName('');
+      setEditPrice('');
+      setEditDiscountedPrice('');
+      setEditStock('');
+      setEditImage('');
+    } else {
+      setEditName(name);
+      setEditPrice(price);
+      setEditDiscountedPrice(discountedPrice);
+      setEditStock(stock);
+      setEditImage(image);
+      setIsEditing(false);
+    }
   };
 
   const handleQuantityChange = (newQuantity) => {
@@ -63,13 +196,11 @@ export default function Card({
     }
   };
 
-  // Generate quantity options based on stock
   const quantityOptions = [];
-  for (let i = 1; i <= Math.min(stock, 10); i++) {
+  for (let i = 1; i <= Math.min(stock || 10, 10); i++) {
     quantityOptions.push(i);
   }
 
-  // Card type determination
   const cardTypes = {
     CUSTOMER_PRODUCT: !isAdmin && !cartPage,
     CUSTOMER_CART: !isAdmin && cartPage,
@@ -78,9 +209,8 @@ export default function Card({
     ADMIN_VIEW: isAdmin && !isEditing && !addCard
   };
 
-  // Render functions for different sections
   const renderImage = () => {
-    if (isAdmin && isEditing || addCard) {
+    if ((isAdmin && isEditing) || addCard) {
       return (
         <input
           type="url"
@@ -95,57 +225,57 @@ export default function Card({
     return (
       <img
         className="productImage"
-        src={image}
+        src={image || "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjZGRkIi8+PHRleHQgeD0iNTAlIiB5PSI1MCUiIGZvbnQtc2l6ZT0iMTgiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGR5PSIuM2VtIiBmaWxsPSIjOTk5Ij5ObyBJbWFnZTwvdGV4dD48L3N2Zz4="}
         alt="product"
         onError={(e) => {
-          e.target.src =
-            "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjZGRkIi8+PHRleHQgeD0iNTAlIiB5PSI1MCUiIGZvbnQtc2l6ZT0iMTgiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGR5PSIuM2VtIiBmaWxsPSIjOTk5Ij5ObyBJbWFnZTwvdGV4dD48L3N2Zz4=";
+          e.target.src = "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjZGRkIi8+PHRleHQgeD0iNTAlIiB5PSI1MCUiIGZvbnQtc2l6ZT0iMTgiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGR5PSIuM2VtIiBmaWxsPSIjOTk5Ij5ObyBJbWFnZTwvdGV4dD48L3N2Zz4=";
         }}
       />
     );
   };
 
   const renderName = () => {
-    if (isAdmin && isEditing || addCard) {
+    if ((isAdmin && isEditing) || addCard) {
       return (
         <input
           type="text"
           value={editName}
           onChange={(e) => setEditName(e.target.value)}
-          placeholder="Name"
+          placeholder="Product Name *"
           className="editInput large priColor"
+          required
         />
       );
     }
 
-    return <h2 className="large priColor">{name}</h2>;
+    return <h2 className="large priColor">{name || 'New Product'}</h2>;
   };
 
   const renderPrice = () => {
-    if (isAdmin && isEditing || addCard) {
+    if ((isAdmin && isEditing) || addCard) {
       return (
-        <>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
           <input
             type="number"
             value={editPrice}
-            onChange={(e) => setEditPrice(Number(e.target.value))}
+            onChange={(e) => setEditPrice(e.target.value)}
             className="editInput mid"
             step="0.01"
-            placeholder="Regular Price"
+            placeholder="Regular Price * (JD)"
+            required
           />
           <input
             type="number"
             value={editDiscountedPrice}
-            onChange={(e) => setEditDiscountedPrice(Number(e.target.value))}
+            onChange={(e) => setEditDiscountedPrice(e.target.value)}
             className="editInput mid"
             step="0.01"
             placeholder="Discounted Price (optional)"
           />
-        </>
+        </div>
       );
     }
 
-    // Show discounted price if available
     if (discountedPrice) {
       return (
         <div style={{ display: "flex", gap: "1rem", alignItems: "center" }}>
@@ -162,26 +292,26 @@ export default function Card({
       );
     }
 
-    // Show regular price
-    return <h2 className="mid priceText">{price} JD</h2>;
+    return <h2 className="mid priceText">{price ? `${price} JD` : 'Price not set'}</h2>;
   };
 
   const renderStock = () => {
-    if (isAdmin && isEditing || addCard) {
+    if ((isAdmin && isEditing) || addCard) {
       return (
         <input
           type="number"
           value={editStock}
-          onChange={(e) => setEditStock(Number(e.target.value))}
-          placeholder="Stock"
+          onChange={(e) => setEditStock(e.target.value)}
+          placeholder="Stock Quantity *"
           className="editInput small gray"
           min="0"
+          required
         />
       );
     }
 
-    if (isAdmin && !isEditing || !addCard) {
-      return <h2 className="gray small">In stock: {stock}</h2>;
+    if (isAdmin && !isEditing && !addCard) {
+      return <h2 className="gray small">In stock: {stock || 0}</h2>;
     }
 
     return null;
@@ -232,18 +362,14 @@ export default function Card({
       );
     }
 
-    if (cardTypes.ADMIN_ADD) {
+    if (cardTypes.ADMIN_ADD || cardTypes.ADMIN_EDIT) {
       return (
-        <button className="priBtn small" onClick={() => console.log("Add Product clicked")}>
-          Add Product
-        </button>
-      );
-    }
-
-    if (cardTypes.ADMIN_EDIT) {
-      return (
-        <button className="priBtn small" onClick={handleSave}>
-          Save
+        <button 
+          className="priBtn small" 
+          onClick={handleSave}
+          disabled={isLoading}
+        >
+          {isLoading ? 'Saving...' : (addCard ? 'Add Product' : 'Save Changes')}
         </button>
       );
     }
@@ -274,8 +400,12 @@ export default function Card({
 
     if (cardTypes.ADMIN_VIEW) {
       return (
-        <button className="secBtn small" onClick={onDelete}>
-          Delete
+        <button 
+          className="secBtn small" 
+          onClick={handleDelete}
+          disabled={isLoading}
+        >
+          {isLoading ? 'Deleting...' : 'Delete'}
         </button>
       );
     }
