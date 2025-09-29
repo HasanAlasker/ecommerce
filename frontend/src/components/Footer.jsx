@@ -2,16 +2,53 @@ import Logo from "../assets/pics/alasker.png";
 import Logo3 from "../assets/pics/logoText.png";
 import Logo2 from "../assets/pics/navLogo.png";
 import React, { useState } from "react";
+import { BASE_URL } from "../constants/baseUrl";
+
+const addSubscriber = async (email) => {
+
+  try {
+    const response = await fetch(`${BASE_URL}/subscribe`, {
+      method: "POST",
+      body: JSON.stringify({email}),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    return await response.json();
+  } catch (error) {
+    console.error("Error creating Product:", error);
+    throw error;
+  }
+};
 
 const Footer = () => {
   const [email, setEmail] = useState("");
   const [showPrivacy, setShowPrivacy] = useState(false);
+  const [isLoading, setIsLoading] = useState(false)
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Newsletter signup:", email);
-    setEmail("");
-    alert("Thank you for subscribing!");
+    
+    if (!email || !email.includes('@')) {
+      alert('Please enter a valid email address');
+      return;
+    }
+
+    setIsLoading(true);
+    
+    try {
+      await addSubscriber(email);
+      setEmail("");
+      alert("Thank you for subscribing!");
+    } catch (error) {
+      alert(error.message || "Failed to subscribe. Please try again.");
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -72,7 +109,7 @@ const Footer = () => {
                   onChange={(e) => setEmail(e.target.value)}
                   className="newsletter-input"
                 />
-                <button onClick={handleSubmit} className="newsletter-button">
+                <button onClick={handleSubmit} disabled={isLoading} className="newsletter-button">
                   Subscribe
                 </button>
               </div>
@@ -88,7 +125,11 @@ const Footer = () => {
           {/* Bottom Bar */}
           <div className="footer-bottom">
             <a href="https://alasker.dev" className="footer-logo">
-              <img src={Logo3} alt="" className="footerLogo Textlogo-placeholder" />
+              <img
+                src={Logo3}
+                alt=""
+                className="footerLogo Textlogo-placeholder"
+              />
             </a>
             <p className="copyright">
               © {new Date().getFullYear()} All rights reserved.
