@@ -1,98 +1,172 @@
-import React from "react";
-import { useTranslation } from "react-i18next";
-import Logo from "../pics/logoText.png";
+import Logo from "../assets/pics/alasker.png";
+import Logo3 from "../assets/pics/logoText.png";
+import Logo2 from "../assets/pics/navLogo.png";
+import React, { useState } from "react";
 
-function Footer() {
-  const { t } = useTranslation();
+const Footer = () => {
+  const [email, setEmail] = useState("");
+  const [showPrivacy, setShowPrivacy] = useState(false);
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    console.log("Newsletter signup:", email);
+    setEmail("");
+    alert("Thank you for subscribing!");
+  };
 
   return (
-    <footer className="footer">
-      <div className="top-footer">
-        <div className="left-footer">
-          <div className="contact-me-footer">
-            <h3 className="footer-big-text">{t("contact.title")}</h3>
-            <a
-              href="mailto:contact@alasker.dev"
-              className="footer-small-text hover"
-            >
-              <i className="ri-mail-line"></i> {t("contact.email")}
+    <>
+      <footer className="footer">
+        <div className="footer-container">
+          <div className="footer-grid">
+            {/* Company Info */}
+            <div className="footer-column">
+              <a href="#" className="footer-logo">
+                <div className="logo-placeholder">
+                  <img src={Logo2} alt="" className="footerLogo" />
+                </div>
+              </a>
+
+              <p className="footer-description">
+                Bringing beauty and elegance to your special moments with fresh,
+                handcrafted floral arrangements.
+              </p>
+              <div className="social-links">
+                <a
+                  href="https://www.instagram.com/petalandstemm/?hl=en"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="social-icon"
+                  aria-label="Instagram"
+                >
+                  <svg viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z" />
+                  </svg>
+                </a>
+                <a
+                  href="https://www.facebook.com/Dana.N.Alasker"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="social-icon"
+                  aria-label="Facebook"
+                >
+                  <svg viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" />
+                  </svg>
+                </a>
+              </div>
+            </div>
+
+            {/* Newsletter */}
+            <div className="footer-column newsletter-column">
+              <h3 className="footer-title">Stay Connected</h3>
+              <p className="newsletter-text">
+                Subscribe to receive special offers, floral tips, and updates on
+                seasonal arrangements.
+              </p>
+              <div className="newsletter-form">
+                <input
+                  type="email"
+                  placeholder="Enter your email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  className="newsletter-input"
+                />
+                <button onClick={handleSubmit} className="newsletter-button">
+                  Subscribe
+                </button>
+              </div>
+              <button
+                onClick={() => setShowPrivacy(!showPrivacy)}
+                className="privacy-link"
+              >
+                Privacy Policy
+              </button>
+            </div>
+          </div>
+
+          {/* Bottom Bar */}
+          <div className="footer-bottom">
+            <a href="https://alasker.dev" className="footer-logo">
+              <img src={Logo3} alt="" className="footerLogo Textlogo-placeholder" />
             </a>
+            <p className="copyright">
+              © {new Date().getFullYear()} All rights reserved.
+            </p>
+            <p className="dev-credit">
+              Website developed by{" "}
+              <a
+                href="https://alasker.dev"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Alasker Technologies
+              </a>
+            </p>
           </div>
+        </div>
+      </footer>
 
-          <div className="social-footer">
-            <h3 className="footer-big-text">{t("contact.socialMedia")}</h3>
-            <div className="social-icons">
-              <a
-                href="https://www.linkedin.com/in/hasan-alasker-58682335a/"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="footer-icon"
-              >
-                <i className="ri-linkedin-box-fill hover"></i>
-              </a>
-              <a
-                href="https://github.com/HasanAlasker"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="footer-icon"
-              >
-                <i className="ri-github-fill hover"></i>
-              </a>
-              <a
-                href="https://www.instagram.com/hasan_s_alasker/?hl=en"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="footer-icon"
-              >
-                <i className="ri-instagram-fill hover"></i>
-              </a>
+      {/* Privacy Policy Modal */}
+      {showPrivacy && (
+        <div className="modal-overlay" onClick={() => setShowPrivacy(false)}>
+          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+            <button
+              className="modal-close"
+              onClick={() => setShowPrivacy(false)}
+              aria-label="Close"
+            >
+              ×
+            </button>
+            <h2>Privacy Policy</h2>
+            <div className="modal-body">
+              <h3>Newsletter Registration</h3>
+              <p>
+                When you subscribe to our newsletter, we collect your email
+                address to send you updates about our products, services, and
+                special offers.
+              </p>
+
+              <h3>How We Use Your Information</h3>
+              <p>Your email address will be used exclusively to:</p>
+              <ul>
+                <li>Send you our newsletter and promotional materials</li>
+                <li>
+                  Notify you about special offers and seasonal arrangements
+                </li>
+                <li>Share floral care tips and arrangement ideas</li>
+              </ul>
+
+              <h3>Data Protection</h3>
+              <p>
+                We are committed to protecting your personal information. Your
+                email address will never be sold, shared, or distributed to
+                third parties without your explicit consent.
+              </p>
+
+              <h3>Your Rights</h3>
+              <p>You have the right to:</p>
+              <ul>
+                <li>Unsubscribe from our newsletter at any time</li>
+                <li>Request deletion of your personal data</li>
+                <li>Access the information we hold about you</li>
+              </ul>
+
+              <h3>Contact Us</h3>
+              <p>
+                If you have any questions about our privacy practices, please
+                contact us through our website or social media channels.
+              </p>
+
+              <p className="last-updated">
+                Last updated: {new Date().toLocaleDateString()}
+              </p>
             </div>
           </div>
         </div>
-
-        <div className="middle-footer">
-          <div className="quick-links">
-            <h3 className="footer-big-text">{t("footer.quickLinks")}</h3>
-            <div className="links-for-footer">
-              <a href="#home" className="footer-small-text hover">
-                {t("footer.home")}
-              </a>
-              <a href="#expertise" className="footer-small-text hover">
-                {t("footer.expertise")}
-              </a>
-              <a href="#products" className="footer-small-text hover">
-                {t("footer.products")}
-              </a>
-              <a href="#about" className="footer-small-text hover">
-                {t("footer.about")}
-              </a>
-              <a href="#contact" className="footer-small-text hover">
-                {t("footer.contact")}
-              </a>
-            </div>
-          </div>
-        </div>
-
-        <div className="right-footer">
-          <div className="privacy">
-            <h3 className="footer-big-text">{t("footer.privacyPolicy")}</h3>
-            <p className="footer-small-text long">{t("footer.privacyText")}</p>
-          </div>
-
-          {/* <div className="credit">
-                        <h3 className="footer-big-text goldText">{t('footer.credits')}</h3>
-                    </div> */}
-
-          <img src={Logo} alt="" className="footerLogo" />
-        </div>
-      </div>
-      <div className="bottom-footer">
-        <div className="copyright">
-          <h3 className="footer-big-text goldText">{t("footer.copyright")}</h3>
-        </div>
-      </div>
-    </footer>
+      )}
+    </>
   );
-}
+};
 
 export default Footer;

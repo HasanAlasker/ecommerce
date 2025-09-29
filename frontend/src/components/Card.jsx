@@ -75,12 +75,12 @@ export default function Card({
   onDelete,
   onAddToCart,
   onRemove,
-  onQuantityChange,
+  // onQuantityChange,
   discountedPrice,
   onProductAdded
 }) {
   const [isEditing, setIsEditing] = useState(false);
-  const [selectedQuantity, setSelectedQuantity] = useState(quantity);
+  // const [selectedQuantity, setSelectedQuantity] = useState(quantity);
   const [isLoading, setIsLoading] = useState(false);
 
   const [editName, setEditName] = useState(name || '');
@@ -183,16 +183,16 @@ export default function Card({
     }
   };
 
-  const handleQuantityChange = (newQuantity) => {
-    setSelectedQuantity(newQuantity);
-    if (onQuantityChange) {
-      onQuantityChange(newQuantity);
-    }
-  };
+  // const handleQuantityChange = (newQuantity) => {
+  //   setSelectedQuantity(newQuantity);
+  //   if (onQuantityChange) {
+  //     onQuantityChange(newQuantity);
+  //   }
+  // };
 
   const handleAddToCart = () => {
     if (onAddToCart) {
-      onAddToCart(selectedQuantity);
+      onAddToCart(1);
     }
   };
 
@@ -329,21 +329,21 @@ export default function Card({
     return null;
   };
 
-  const renderQuantitySelect = () => {
-    return (
-      <select
-        value={selectedQuantity}
-        onChange={(e) => handleQuantityChange(Number(e.target.value))}
-        className="secBtn small"
-      >
-        {quantityOptions.map((num) => (
-          <option key={num} value={num}>
-            {num}
-          </option>
-        ))}
-      </select>
-    );
-  };
+  // const renderQuantitySelect = () => {
+  //   return (
+  //     <select
+  //       value={selectedQuantity}
+  //       onChange={(e) => handleQuantityChange(Number(e.target.value))}
+  //       className="secBtn small"
+  //     >
+  //       {quantityOptions.map((num) => (
+  //         <option key={num} value={num}>
+  //           {num}
+  //         </option>
+  //       ))}
+  //     </select>
+  //   );
+  // };
 
   const renderPrimaryButton = () => {
     if (cardTypes.CUSTOMER_PRODUCT) {
@@ -387,7 +387,8 @@ export default function Card({
 
   const renderSecondaryButton = () => {
     if (cardTypes.CUSTOMER_PRODUCT || cardTypes.CUSTOMER_CART) {
-      return renderQuantitySelect();
+      // return renderQuantitySelect();
+      return null
     }
 
     if (cardTypes.ADMIN_EDIT) {
