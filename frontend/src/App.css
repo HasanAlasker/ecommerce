@@ -197,9 +197,26 @@ nav {
   letter-spacing: 0.3px;
 }
 
+
 .priBtn:hover {
   transform: translateY(-2px);
   box-shadow: 0 8px 20px rgba(255, 56, 93, 0.35);
+}
+
+.disBtn {
+  width: 100%;
+  border: none;
+  color: var(--white);
+  background: var(--primary);
+  opacity: .5;
+  padding: 0.5rem 1.5rem;
+  border-radius: 3rem;
+  font-weight: 600;
+
+  flex: 2;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 12px rgba(255, 56, 93, 0.2);
+  letter-spacing: 0.3px;
 }
 
 .priBtn:active {
