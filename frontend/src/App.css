@@ -41,6 +41,15 @@ body {
 .large {
   font-size: clamp(1rem, 1.7rem, 3rem);
 }
+.xLarge{
+  font-size: clamp(2rem, 5vw, 3rem);
+}
+.alone{
+  margin:8rem 0
+}
+.center{
+  text-align: center;
+}
 .priColor {
   background: var(--primary);
   background-clip: text;
