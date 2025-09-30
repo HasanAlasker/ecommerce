@@ -7,9 +7,11 @@ import Footer from "./components/Footer";
 import Register from "./pages/Register";
 import AuthProvider from "./context/AuthProvider";
 import Cart from "./pages/Cart";
+import Orders from "./pages/Orders";
+import AuthRoute from "./components/AuthRoute";
+import AdminRoute from "./components/AdminRoute";
 
 function App() {
-  
   return (
     <AuthProvider>
       <BrowserRouter>
@@ -18,7 +20,12 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
-          <Route path="/cart" element={<Cart />} />
+          <Route element={<AuthRoute />}>
+            <Route path="/cart" element={<Cart />} />
+          </Route>
+          <Route element={<AdminRoute />}>
+            <Route path="/orders" element={<Orders />} />
+          </Route>
         </Routes>
         <Footer></Footer>
       </BrowserRouter>
