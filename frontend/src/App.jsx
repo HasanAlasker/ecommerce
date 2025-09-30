@@ -20,12 +20,15 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
+
           <Route element={<AuthRoute />}>
             <Route path="/cart" element={<Cart />} />
           </Route>
+
           <Route element={<AdminRoute />}>
             <Route path="/orders" element={<Orders />} />
           </Route>
+          
         </Routes>
         <Footer></Footer>
       </BrowserRouter>
