@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import { BASE_URL } from "../constants/baseUrl";
+import { useAuth } from "../context/AuthContext";
+import { useNavigate } from "react-router-dom";
 
 const createProduct = async (data) => {
   try {
@@ -82,6 +84,7 @@ export default function Card({
   const [isEditing, setIsEditing] = useState(false);
   // const [selectedQuantity, setSelectedQuantity] = useState(quantity);
   const [isLoading, setIsLoading] = useState(false);
+  const navigate = useNavigate()
 
   const [editName, setEditName] = useState(name || "");
   const [editPrice, setEditPrice] = useState(price || "");
@@ -90,6 +93,7 @@ export default function Card({
   );
   const [editStock, setEditStock] = useState(stock || "");
   const [editImage, setEditImage] = useState(image || "");
+  const {user} = useAuth()
 
   const handleSave = async () => {
     if (!editName || !editPrice || !editStock) {
@@ -193,11 +197,15 @@ export default function Card({
   //   }
   // };
 
-  const handleAddToCart = () => {
-    if (onAddToCart) {
-      onAddToCart(1);
-    }
-  };
+const handleAddToCart = () => {
+  if(!user){
+    navigate('/login');
+    return;
+  }
+  if (onAddToCart) {
+    onAddToCart(1);
+  }
+};
 
   const quantityOptions = [];
   for (let i = 1; i <= Math.min(stock || 10, 10); i++) {
@@ -368,7 +376,7 @@ export default function Card({
       return (
         <button
           className={disableAddToCart() ? "disBtn small" : "priBtn small"}
-          disabled={disableAddToCart}
+          disabled={disableAddToCart()}
           onClick={handleAddToCart}
         >
           {disableAddToCart() ? "Out of stock" : "Add to cart"}

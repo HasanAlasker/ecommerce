@@ -8,6 +8,7 @@ import Register from "./pages/Register";
 import AuthProvider from "./context/AuthProvider";
 
 function App() {
+  
   return (
     <AuthProvider>
       <BrowserRouter>
