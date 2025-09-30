@@ -24,7 +24,9 @@ export default function Cart() {
       {cart && cart.items && cart.items.length > 0 ? (
         <>
           <div className="check-container">
-            <p className="mid gray" style={{marginTop:'1rem'}}>Total Items: {cart.totalItems}</p>
+            <p className="mid gray" style={{ marginTop: "1rem" }}>
+              Total Items: {cart.totalItems}
+            </p>
           </div>
 
           <div className="card-cont">
@@ -49,12 +51,14 @@ export default function Cart() {
             <div className="cart-checkout-box ">
               <p className="mid gray">Total Items: {cart.totalItems}</p>
               <p className="large priColor bold">
-                Total: {cart.totalAmount} JD
+                Total Price: {cart.totalAmount} JD
               </p>
             </div>
             <div className="ctaCard">
               <button className="square mid">Confirm order</button>
-              <button className="square secSq mid" onClick={clearCart}>Clear cart</button>
+              <button className="square secSq mid" onClick={clearCart}>
+                Clear cart
+              </button>
             </div>
           </div>
         </>

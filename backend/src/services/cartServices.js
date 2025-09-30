@@ -55,16 +55,19 @@ export const addItemToCart = async ({ userId, productId, quantity = 1 }) => {
       return { data: "Insufficient stock", statusCode: 400 };
     }
 
-    const subtotal = product.price * quantity;
+    // Use discounted price if available, otherwise use regular price
+    const effectivePrice = product.discountedPrice || product.price;
+    const subtotal = effectivePrice * quantity;
 
     // Add item with all required fields
     cart.items.push({
       productId,
       name: product.name,
       image: product.image,
-      price: product.price,
+      price: product.price, // Keep original price for display
+      discountedPrice: product.discountedPrice, // Store discounted price
       quantity,
-      subtotal,
+      subtotal, // Use effective price for subtotal
     });
 
     // Update cart total amount
@@ -103,7 +106,10 @@ export const updateItemInCart = async ({ userId, productId, quantity }) => {
 
     // Update the item's quantity and subtotal
     existsInCart.quantity = quantity;
-    existsInCart.subtotal = existsInCart.price * quantity;
+    
+    // Use discounted price if available, otherwise use regular price
+    const effectivePrice = existsInCart.discountedPrice || existsInCart.price;
+    existsInCart.subtotal = effectivePrice * quantity;
 
     // Recalculate total amount for the entire cart
     cart.totalAmount = calculateCartTotal(cart.items);

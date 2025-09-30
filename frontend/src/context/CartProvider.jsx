@@ -145,10 +145,7 @@ const CartProvider = ({ children }) => {
     refreshCart: fetchCart,
   };
 
-  // Don't render children until cart is initialized
-  if (!isInitialized) {
-    return <div>Loading cart...</div>;
-  }
+
 
   return (
     <CartContext.Provider value={value}>
