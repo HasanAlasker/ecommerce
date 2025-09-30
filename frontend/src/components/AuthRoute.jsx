@@ -4,7 +4,8 @@ import { useAuth } from "../context/AuthContext";
 
 export default function AuthRoute() {
 
-  const { isAuthinticated } = useAuth();
+  const { user } = useAuth();
+  const isAuthinticated = user && user.role === 'user'
 
   if(!isAuthinticated){
     return <Navigate to={"/login"} replace />

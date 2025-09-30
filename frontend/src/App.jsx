@@ -10,28 +10,30 @@ import Cart from "./pages/Cart";
 import Orders from "./pages/Orders";
 import AuthRoute from "./components/AuthRoute";
 import AdminRoute from "./components/AdminRoute";
+import CartProvider from "./context/CartProvider";
 
 function App() {
   return (
     <AuthProvider>
-      <BrowserRouter>
-        <Nav></Nav>
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
+      <CartProvider>
+        <BrowserRouter>
+          <Nav></Nav>
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
 
-          <Route element={<AuthRoute />}>
-            <Route path="/cart" element={<Cart />} />
-          </Route>
+            <Route element={<AuthRoute />}>
+              <Route path="/cart" element={<Cart />} />
+            </Route>
 
-          <Route element={<AdminRoute />}>
-            <Route path="/orders" element={<Orders />} />
-          </Route>
-          
-        </Routes>
-        <Footer></Footer>
-      </BrowserRouter>
+            <Route element={<AdminRoute />}>
+              <Route path="/orders" element={<Orders />} />
+            </Route>
+          </Routes>
+          <Footer></Footer>
+        </BrowserRouter>
+      </CartProvider>
     </AuthProvider>
   );
 }

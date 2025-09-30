@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { BASE_URL } from "../constants/baseUrl";
 import { useAuth } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
+import { useCart } from "../context/CartContext";
 
 const createProduct = async (data) => {
   try {
@@ -74,8 +75,6 @@ export default function Card({
   addCard = false,
   onSave,
   onDelete,
-  onAddToCart,
-  onRemove,
   // onQuantityChange,
   discountedPrice,
   onProductAdded,
@@ -93,6 +92,7 @@ export default function Card({
   const [editStock, setEditStock] = useState(stock || "");
   const [editImage, setEditImage] = useState(image || "");
   const { user } = useAuth();
+  const { addToCart, removeFromCart } = useCart();
 
   const handleSave = async () => {
     if (!editName || !editPrice || !editStock) {
@@ -196,15 +196,45 @@ export default function Card({
   //   }
   // };
 
-  const handleAddToCart = () => {
-    if (!user) {
-      navigate("/login");
-      return;
+  const handleAddToCart = async (id) => {
+  if (!user) {
+    navigate("/login");
+    return;
+  }
+  
+  setIsLoading(true);
+  try {
+    const success = await addToCart(id, 1); // Add quantity as second param
+    if (success) {
+      alert("Added to cart!");
+    } else {
+      alert("Failed to add to cart");
     }
-    if (onAddToCart) {
-      onAddToCart(1);
+  } catch (error) {
+    console.error("Error adding to cart:", error);
+    alert("Error adding to cart");
+  } finally {
+    setIsLoading(false);
+  }
+};
+
+  const handleRemove = async (id) => {
+
+  setIsLoading(true);
+  try {
+    const success = await removeFromCart(id); // Add quantity as second param
+    if (success) {
+      alert("Removed from cart!");
+    } else {
+      alert("Failed to remove from cart");
     }
-  };
+  } catch (error) {
+    console.error("Error removing from cart:", error);
+    alert("Error removing from cart");
+  } finally {
+    setIsLoading(false);
+  }
+};
 
   const quantityOptions = [];
   for (let i = 1; i <= Math.min(stock || 10, 10); i++) {
@@ -371,7 +401,7 @@ export default function Card({
         <button
           className={disableAddToCart() ? "disBtn small" : "priBtn small"}
           disabled={disableAddToCart()}
-          onClick={handleAddToCart}
+          onClick={()=>handleAddToCart(id)}
         >
           {disableAddToCart() ? "Out of stock" : "Add to cart"}
         </button>
@@ -380,7 +410,7 @@ export default function Card({
 
     if (cardTypes.CUSTOMER_CART) {
       return (
-        <button className="priBtn small" onClick={onRemove}>
+        <button className="priBtn small" onClick={()=> handleRemove(id)}>
           Remove
         </button>
       );

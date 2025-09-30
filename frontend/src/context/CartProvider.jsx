@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { CartContext } from './CartContext';
 import { BASE_URL } from '../constants/baseUrl';
 import { useAuth } from "./AuthContext";
@@ -127,9 +127,9 @@ const CartProvider = ({ children }) => {
   };
 
   // Initialize cart on mount
-//   useEffect(() => {
-//     fetchCart();
-//   }, []);
+  useEffect(() => {
+    fetchCart();
+  }, []);
 
   const value = {
     cart,
