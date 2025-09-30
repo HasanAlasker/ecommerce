@@ -287,7 +287,7 @@ nav {
   grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
   gap: 2rem;
   position: relative;
-  width: 90%;
+  width: 100%;
   max-width: 1400px;
   margin: 3rem auto 6rem auto;
   padding: 0 1rem;
@@ -506,7 +506,7 @@ nav {
 }
 
 .footer-container {
-  max-width: 1200px;
+  width: 90%;
   margin: 0 auto;
 }
 
@@ -831,6 +831,7 @@ nav {
 
 /* Responsive Design */
 @media (max-width: 768px) {
+
   .footer {
     padding: 40px 20px 20px;
   }
@@ -839,6 +840,7 @@ nav {
     grid-template-columns: 1fr;
     gap: 40px;
     margin-bottom: 40px;
+    
   }
 
   .newsletter-form {
@@ -918,5 +920,29 @@ nav {
 @media (min-width: 1120px) {
   .card-cont {
     grid-template-columns: repeat(auto-fit, minmax(19rem, 1fr));
+    width: 85%;
+  }
+
+  .footer-container{
+    width: 80%;
+
+  }
+  .nav-cont{
+    width: 80%;
+  }
+}
+
+@media (min-width: 1620px) {
+  .card-cont {
+    grid-template-columns: repeat(auto-fit, minmax(19rem, 1fr));
+    width: 75%;
+  }
+
+  .footer-container{
+    width: 70%;
+
+  }
+  .nav-cont{
+    width: 70%;
   }
 }
