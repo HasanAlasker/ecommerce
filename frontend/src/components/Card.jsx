@@ -69,7 +69,6 @@ export default function Card({
   price,
   stock,
   quantity = 1,
-  total,
   isAdmin,
   cartPage = false,
   addCard = false,
@@ -84,7 +83,7 @@ export default function Card({
   const [isEditing, setIsEditing] = useState(false);
   // const [selectedQuantity, setSelectedQuantity] = useState(quantity);
   const [isLoading, setIsLoading] = useState(false);
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   const [editName, setEditName] = useState(name || "");
   const [editPrice, setEditPrice] = useState(price || "");
@@ -93,7 +92,7 @@ export default function Card({
   );
   const [editStock, setEditStock] = useState(stock || "");
   const [editImage, setEditImage] = useState(image || "");
-  const {user} = useAuth()
+  const { user } = useAuth();
 
   const handleSave = async () => {
     if (!editName || !editPrice || !editStock) {
@@ -197,15 +196,15 @@ export default function Card({
   //   }
   // };
 
-const handleAddToCart = () => {
-  if(!user){
-    navigate('/login');
-    return;
-  }
-  if (onAddToCart) {
-    onAddToCart(1);
-  }
-};
+  const handleAddToCart = () => {
+    if (!user) {
+      navigate("/login");
+      return;
+    }
+    if (onAddToCart) {
+      onAddToCart(1);
+    }
+  };
 
   const quantityOptions = [];
   for (let i = 1; i <= Math.min(stock || 10, 10); i++) {
@@ -338,12 +337,7 @@ const handleAddToCart = () => {
 
   const renderCartInfo = () => {
     if (!isAdmin && cartPage) {
-      return (
-        <>
-          <h2 className="gray small">Quantity: {quantity}</h2>
-          <h2 className="red mid totalText">Total: {total} JD</h2>
-        </>
-      );
+      return <h2 className="gray small">Quantity: {quantity}</h2>;
     }
     return null;
   };
