@@ -7,6 +7,9 @@ const orderSchema = new mongoose.Schema({
     required: true,
     index: true, // For faster queries
   },
+  userName: String,
+  userPhone: String,
+  userEmail: String,
   orderItems: [
     {
       productName: {

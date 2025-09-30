@@ -180,10 +180,10 @@ export const checkout = async ({ userId }) => {
       }
 
       const orderItem = {
-        productName: product.name,    // Changed from productTitle
+        productName: product.name,    
         productImage: product.image,
-        productQuantity: item.quantity, // Use cart item quantity, not product quantity
-        productPrice: product.price,
+        productQuantity: item.quantity, 
+        productPrice: product.discountedPrice || product.price,
       };
 
       orderItems.push(orderItem);
@@ -194,6 +194,9 @@ export const checkout = async ({ userId }) => {
       userId,
       total: cart.totalAmount,
       address: user.address,
+      userName: user.fullName,
+      userPhone: user.phone,
+      userEmail: user.email
     });
 
     // Update product stock

@@ -4,8 +4,8 @@ import Card from "../components/Card";
 import { useCart } from "../context/CartContext";
 
 export default function Cart() {
-  const { token } = useAuth();
-  const { cart, loading, clearCart } = useCart();
+  const { token, user } = useAuth();
+  const { cart, loading, clearCart, checkout } = useCart();
 
   if (!token) {
     return <h1 className="xLarge center alone">Please login first!</h1>;
@@ -55,7 +55,7 @@ export default function Cart() {
               </p>
             </div>
             <div className="ctaCard">
-              <button className="square mid">Confirm order</button>
+              <button className="square mid" onClick={()=>checkout(user._id)}>Confirm order</button>
               <button className="square secSq mid" onClick={clearCart}>
                 Clear cart
               </button>

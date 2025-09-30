@@ -6,6 +6,7 @@ import productsRoute from './routers/productsRoute.js'
 import cartRoute from './routers/cartRoute.js'
 import validateJWT from "./middlewares/validateJWT.js";
 import subscribersRoute from './routers/subscribersRoute.js'
+import orderRoute from './routers/orderRoute.js'
 import cors from 'cors'
 
 dotenv.config()
@@ -35,6 +36,7 @@ app.use('/users', usersRoute);
 app.use('/products', productsRoute);
 app.use('/cart', validateJWT, cartRoute);
 app.use('/subscribe', subscribersRoute);
+app.use('/orders', orderRoute);
 
 app.listen(port, () => {
     console.log(`Server is running at port ${port}`);
