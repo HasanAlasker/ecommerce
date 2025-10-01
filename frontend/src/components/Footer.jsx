@@ -128,7 +128,7 @@ const Footer = () => {
               <img
                 src={Logo3}
                 alt=""
-                className="footerLogo Textlogo-placeholder"
+                className="Textlogo-placeholder"
               />
             </a>
             <p className="copyright">
