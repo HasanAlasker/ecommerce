@@ -9,6 +9,10 @@ export default function Orders() {
   const [loading, setLoading] = useState(true);
   const { token } = useAuth();
 
+  const handleOrderDeleted = (deletedOrderId) => {
+    setOrders(orders.filter(order => order._id !== deletedOrderId));
+  };
+
   useEffect(() => {
     const fetchOrders = async () => {
       try {
@@ -71,11 +75,14 @@ export default function Orders() {
               {orders.map((item) => (
                 <OrderCard
                   key={item._id}
+                  id={item._id}
                   userName={item.userName}
                   phone={item.userPhone}
                   email={item.userEmail}
                   address={item.address}
                   total={item.total}
+                  orderItems={item.orderItems}
+                  onDelete={handleOrderDeleted}
                 />
               ))}
             </div>
