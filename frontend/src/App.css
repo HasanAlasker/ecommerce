@@ -620,6 +620,8 @@ nav {
 }
 .footerLogo{
   width: 100%;
+  object-fit: cover;
+  aspect-ratio: 1/1;
 }
 .footer-description {
   color: var(--gray);

@@ -10,12 +10,12 @@ export default function OrderCard({
   orderItems,
   total,
   id,
-  onDelete
+  onDelete,
 }) {
   const { token } = useAuth();
   const [isLoading, setIsLoading] = useState(false);
 
- const handleConfirm = async () => {
+  const handleConfirm = async () => {
     const confirmed = window.confirm(
       `Are you sure you want to confirm this order?`
     );
@@ -25,7 +25,7 @@ export default function OrderCard({
     }
 
     setIsLoading(true);
-   try {
+    try {
       const response = await fetch(`${BASE_URL}/orders/${id}`, {
         method: "DELETE",
         headers: {
@@ -38,7 +38,7 @@ export default function OrderCard({
       }
 
       alert("Order confirmed successfully!");
-      
+
       // Notify parent to remove this order from the list
       if (onDelete) {
         onDelete(id);
@@ -58,14 +58,53 @@ export default function OrderCard({
         <h2 className="mid secColor">{phone}</h2>
         <h2 className="small secColor">{address}</h2>
         <h2 className="small gray">{email}</h2>
-        <h2 className="mid secColor">{orderItems[0].productName}</h2>
+
+        <div style={{ margin: "1rem 0", width: "100%" }}>
+          <h3 className="mid secColor">Order Items:</h3>
+          {orderItems?.map((item, index) => (
+            <div 
+              key={index} 
+              style={{ 
+                display: "flex", 
+                alignItems: "center", 
+                gap: "1rem", 
+                marginTop: "0.5rem",
+                padding: "1rem 0",
+                borderBottom: "1px solid #eee"
+              }}
+            >
+              <div className="logo-placeholder" style={{ flexShrink: 0 }}>
+                <img 
+                  className="footerLogo" 
+                  src={item.productImage}
+                  alt={item.productName}
+                  style={{ objectFit: "cover" }}
+                />
+              </div>
+              <div style={{ flex: 1 , display:'flex', flexDirection:'column', gap:'.4rem'}}>
+                <h2 className="mid priColor">{item.productName}</h2>
+                <p className="small gray">Quantity: {item.productQuantity}</p>
+                <p className="small secColor">
+                  {item.productPrice} JD
+                </p>
+              </div>
+            </div>
+          ))}
+        </div>
+
         <h2 className="mid priColor">Total: {total} JD</h2>
       </div>
       <div className="ctaCard">
-        <button className="priBtn small" disabled={isLoading} onClick={() => handleConfirm(id)}>
+        <button
+          className="priBtn small"
+          disabled={isLoading}
+          onClick={() => handleConfirm(id)}
+        >
           Confirm
         </button>
-        <button className="secBtn small" disabled={isLoading}>Delete</button>
+        <button className="secBtn small" disabled={isLoading}>
+          Delete
+        </button>
       </div>
     </div>
   );
