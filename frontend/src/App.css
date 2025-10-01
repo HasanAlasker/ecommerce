@@ -36,10 +36,10 @@ body {
   font-size: clamp(0.4rem, 1rem, 2.4rem);
 }
 .mid {
-  font-size: clamp(0.8rem, 3vw, 1.6rem);
+  font-size: clamp(1.2rem, 3vw, 1.6rem);
 }
 .large {
-  font-size: clamp(1rem, 4vw, 2.1rem);
+  font-size: clamp(1.4rem, 4vw, 2.1rem);
 }
 .xLarge {
   font-size: clamp(2rem, 5vw, 3rem);
@@ -136,6 +136,10 @@ nav {
   margin: 2rem 0;
 }
 .square {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
   padding: 10px 20px;
   background: var(--primary);
   color: var(--white);
@@ -146,6 +150,7 @@ nav {
   transition: all 0.3s ease;
   white-space: nowrap;
   font-family: "Inter", sans-serif;
+  width: 50%;
 }
 .square:hover {
   transform: translateY(-2px);
@@ -369,7 +374,7 @@ nav {
 
 .card-cont {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
   gap: 2rem;
   position: relative;
   width: 100%;
@@ -979,6 +984,13 @@ nav {
     padding: 25px 15px;
   }
 }
+
+@media (min-width: 760px) {
+  .card-cont {
+    grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
+    width: 90%;
+  }
+}
 /* --------------------------------------------menu---------------------------------------------------- */
 
 /* Hamburger Menu Styles */
@@ -1167,12 +1179,12 @@ nav {
 }
 
 @media (min-width: 600px) {
- .hidden{
-  display: flex;
- }
- .menu{
-  display: none;
- }
+  .hidden {
+    display: flex;
+  }
+  .menu {
+    display: none;
+  }
 }
 
 @media (min-width: 1120px) {

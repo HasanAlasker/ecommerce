@@ -51,7 +51,7 @@ export default function Home() {
 
   if (error) {
     return (
-      <h2 style={{textAlign:'center', color:'#a39e9e'}}>
+      <h2 style={{textAlign:'center', color:'#a39e9e'}} className="alone">
         Something went wrong, please try refreshing the page!
       </h2>
     );
@@ -61,7 +61,7 @@ export default function Home() {
     <>
       {/* <Banner /> */}
       {products.length === 0 && !isAdmin ? (
-        <h2 style={{textAlign:'center', color:'#a39e9e'}}>
+        <h2 style={{textAlign:'center', color:'#a39e9e'}} className="alone">
           There are no products to show!
         </h2>
       ) : (

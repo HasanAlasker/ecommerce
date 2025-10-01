@@ -220,7 +220,7 @@ export default function Card({
       if (success) {
         alert("Added to cart!");
       } else {
-        alert("Failed to add to cart");
+        alert("Item is already in cart");
       }
     } catch (error) {
       console.error("Error adding to cart:", error);

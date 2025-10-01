@@ -47,12 +47,12 @@ export default function Orders() {
   }
 
   if (loading) {
-    return <h2 style={{ textAlign: "center alone" }}>Loading orders...</h2>;
+    return <h2 style={{ textAlign: "center" }} className="alone" >Loading orders...</h2>;
   }
 
   if (error) {
     return (
-      <h2 style={{ textAlign: "center", color: "#a39e9e" }}>
+      <h2 style={{ textAlign: "center", color: "#a39e9e" }} className="alone">
         Something went wrong, please try refreshing the page!
       </h2>
     );
@@ -60,7 +60,7 @@ export default function Orders() {
 
   if (orders.length === 0) {
     return (
-      <h2 className="alone" style={{ textAlign: "center", color: "#a39e9e" }}>No orders found</h2>
+      <h2 className="alone" style={{ textAlign: "center", color: "#a39e9e" }} >No orders found</h2>
     );
   }
 

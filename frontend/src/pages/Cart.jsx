@@ -54,8 +54,10 @@ export default function Cart() {
                 Total Price: {cart.totalAmount} JD
               </p>
             </div>
-            <div className="ctaCard">
-              <button className="square mid" onClick={()=>checkout(user._id)}>Confirm order</button>
+            <div className="ctaCard" style={{width:'100%'}}>
+              <button className="square mid" onClick={() => checkout(user._id)}>
+                Confirm
+              </button>
               <button className="square secSq mid" onClick={clearCart}>
                 Clear cart
               </button>
