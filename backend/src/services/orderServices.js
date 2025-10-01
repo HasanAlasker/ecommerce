@@ -1,5 +1,6 @@
 import orderModel from "../models/orderModel.js";
 import usersModel from "../models/usersModel.js";
+import productModel from "../models/productModel.js";
 
 export const createOrder = async (orderData) => {
   try {
@@ -86,6 +87,34 @@ export const deleteOrder = async (orderId) => {
     return { data: "Order deleted successfully", statusCode: 200 };
   } catch (error) {
     console.error("Error deleting order:", error);
+    return { data: "Internal server error", statusCode: 500 };
+  }
+};
+
+export const cancelOrder = async (orderId) => {
+  try {
+    const order = await orderModel.findById(orderId);
+    
+    if (!order) {
+      return { data: "Order not found", statusCode: 404 };
+    }
+
+    // Restore stock for each product
+    for (const item of order.orderItems) {
+      const product = await productModel.findOne({ name: item.productName });
+      
+      if (product) {
+        product.stock += item.productQuantity; // Increment by ordered quantity
+        await product.save();
+      }
+    }
+
+    // Delete the order
+    await orderModel.findByIdAndDelete(orderId);
+    
+    return { data: "Order cancelled and stock restored", statusCode: 200 };
+  } catch (error) {
+    console.error("Error cancelling order:", error);
     return { data: "Internal server error", statusCode: 500 };
   }
 };

@@ -12,7 +12,7 @@ const AuthProvider = ({children}) => {
     // Login function
     const login = async (email, password) => {
         try {
-            console.log("🚀 Login function called");
+            // console.log("🚀 Login function called");
             setLoading(true)
             
             const response = await fetch(`${BASE_URL}/users/login`, {
@@ -24,11 +24,11 @@ const AuthProvider = ({children}) => {
             })
 
             const data = await response.json()
-            console.log("📦 Login response:", data);
+            // console.log("📦 Login response:", data);
 
             if (response.ok) {
-                console.log("✅ Login successful, setting user");
-                console.log("🔍 Full response data structure:", data);
+                // console.log("✅ Login successful, setting user");
+                // console.log("🔍 Full response data structure:", data);
                 
                 // Handle the fixed backend structure
                 const token = data.token;
@@ -63,14 +63,14 @@ const AuthProvider = ({children}) => {
                 try {
                     localStorage.setItem('token', token)
                     localStorage.setItem('user', JSON.stringify(user))
-                    console.log("💾 Saved to localStorage:", { token, user });
+                    // console.log("💾 Saved to localStorage:", { token, user });
                 } catch (storageError) {
                     console.warn("Could not save to localStorage:", storageError)
                 }
                 
                 return { success: true, data }
             } else {
-                console.log("❌ Login failed:", data);
+                // console.log("❌ Login failed:", data);
                 return { success: false, error: data.message || 'Login failed' }
             }
         } catch (error) {
@@ -84,7 +84,7 @@ const AuthProvider = ({children}) => {
     // Register function
     const register = async (userData) => {
         try {
-            console.log("📝 Register function called");
+            // console.log("📝 Register function called");
             setLoading(true)
             
             const response = await fetch(`${BASE_URL}/users/register`, {
@@ -96,11 +96,11 @@ const AuthProvider = ({children}) => {
             })
 
             const data = await response.json()
-            console.log("📦 Register response:", data);
+            // console.log("📦 Register response:", data);
 
             if (response.ok) {
-                console.log("✅ Registration successful");
-                console.log("🔍 Full registration response:", data);
+                // console.log("✅ Registration successful");
+                // console.log("🔍 Full registration response:", data);
                 
                 // Check different possible response structures
                 const token = data.token || data.accessToken || data.authToken;
@@ -114,18 +114,18 @@ const AuthProvider = ({children}) => {
                     };
                 }
                 
-                console.log("🔍 Extracted registration values:", { token, user });
+                // console.log("🔍 Extracted registration values:", { token, user });
                 
                 // Auto-login after successful registration
                 if (token && user) {
-                    console.log("✅ Auto-login after registration");
+                    // console.log("✅ Auto-login after registration");
                     setUser(user)
                     setToken(token)
                     
                     try {
                         localStorage.setItem('token', token)
                         localStorage.setItem('user', JSON.stringify(user))
-                        console.log("💾 Saved to localStorage after registration:", { token, user });
+                        // console.log("💾 Saved to localStorage after registration:", { token, user });
                     } catch (storageError) {
                         console.warn("Could not save to localStorage:", storageError)
                     }
@@ -135,11 +135,11 @@ const AuthProvider = ({children}) => {
                 
                 return { success: true, data }
             } else {
-                console.log("❌ Registration failed:", data);
+                // console.log("❌ Registration failed:", data);
                 return { success: false, error: data.message || 'Registration failed' }
             }
         } catch (error) {
-            console.error("💥 Register error:", error);
+            // console.error("💥 Register error:", error);
             return { success: false, error: 'Network error: ' + error.message }
         } finally {
             setLoading(false)
@@ -148,7 +148,7 @@ const AuthProvider = ({children}) => {
 
     // Logout function
     const logout = () => {
-        console.log("👋 Logging out");
+        // console.log("👋 Logging out");
         setUser(null)
         setToken(null)
         
@@ -168,14 +168,14 @@ const AuthProvider = ({children}) => {
     // Initialize auth state from localStorage on mount
     const initializeAuth = () => {
         try {
-            console.log("🔄 Initializing auth from localStorage");
+            // console.log("🔄 Initializing auth from localStorage");
             const storedToken = localStorage.getItem('token')
             const storedUser = localStorage.getItem('user')
             
-            console.log("📦 From localStorage:", { storedToken, storedUser });
+            // console.log("📦 From localStorage:", { storedToken, storedUser });
             
             if (storedToken && storedUser) {
-                console.log("✅ Restoring user from localStorage");
+                // console.log("✅ Restoring user from localStorage");
                 let parsedUser = JSON.parse(storedUser)
                 
                 // Ensure restored user has a role
@@ -188,7 +188,7 @@ const AuthProvider = ({children}) => {
                 
                 setToken(storedToken)
                 setUser(parsedUser)
-                console.log("👤 User restored:", parsedUser);
+                // console.log("👤 User restored:", parsedUser);
             } else {
                 console.log("❌ No stored auth data found");
             }
@@ -208,9 +208,9 @@ const AuthProvider = ({children}) => {
     }, [])
 
     // Debug: Log state changes
-    useEffect(() => {
-        console.log("🔍 Auth state changed:", { user, token, isInitialized });
-    }, [user, token, isInitialized])
+    // useEffect(() => {
+    //     console.log("🔍 Auth state changed:", { user, token, isInitialized });
+    // }, [user, token, isInitialized])
 
     const value = {
         user,

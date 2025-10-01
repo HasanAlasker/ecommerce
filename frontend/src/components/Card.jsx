@@ -3,6 +3,7 @@ import { BASE_URL } from "../constants/baseUrl";
 import { useAuth } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { useCart } from "../context/CartContext";
+import { updateProduct } from "../api/updateProduct";
 
 const createProduct = async (data) => {
   try {
@@ -38,27 +39,6 @@ const deleteProduct = async (id) => {
     return await response.json();
   } catch (error) {
     console.error("Error deleting Product:", error);
-    throw error;
-  }
-};
-
-const updateProduct = async (id, data) => {
-  try {
-    const response = await fetch(`${BASE_URL}/products/${id}`, {
-      method: "PUT",
-      body: JSON.stringify(data),
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
-
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
-
-    return await response.json();
-  } catch (error) {
-    console.error("Error updating Product:", error);
     throw error;
   }
 };

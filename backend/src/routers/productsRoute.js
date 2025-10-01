@@ -1,5 +1,6 @@
 import express from "express";
 import { addProduct, getAllProducts, editProduct, deleteProduct, findProduct } from "../services/productServices.js";
+import validateJWT from "../middlewares/validateJWT.js";
 
 const router = express.Router();
 
@@ -51,7 +52,7 @@ router.post('/', async (req, res) => {
   }
 });
 
-router.put('/:id', async (req, res) => {
+router.put('/:id', validateJWT, async (req, res) => {
   try {
     const id = req.params.id;
     const data = req.body;

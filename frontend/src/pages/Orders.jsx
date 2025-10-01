@@ -60,7 +60,7 @@ export default function Orders() {
 
   if (orders.length === 0) {
     return (
-      <h2 style={{ textAlign: "center", color: "#a39e9e" }}>No orders found</h2>
+      <h2 className="alone" style={{ textAlign: "center", color: "#a39e9e" }}>No orders found</h2>
     );
   }
 

@@ -15,6 +15,7 @@ export default function OrderCard({
   const { token } = useAuth();
   const [isLoading, setIsLoading] = useState(false);
 
+  // remove from database
   const handleConfirm = async () => {
     const confirmed = window.confirm(
       `Are you sure you want to confirm this order?`
@@ -51,6 +52,42 @@ export default function OrderCard({
     }
   };
 
+  // remove from frontend and restock to 1
+  const handleDelete = async () => {
+    const confirmed = window.confirm(
+      `Are you sure you want to cancel this order? Stock will be restored.`
+    );
+
+    if (!confirmed) {
+      return;
+    }
+
+    setIsLoading(true);
+    try {
+      const response = await fetch(`${BASE_URL}/orders/${id}/cancel`, {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      alert("Order cancelled and stock restored successfully!");
+
+      if (onDelete) {
+        onDelete(id);
+      }
+    } catch (error) {
+      console.error("Error cancelling order:", error);
+      alert("Failed to cancel order. Please try again.");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return (
     <div className="productCard noMaxWidth">
       <div className="topCard">
@@ -62,31 +99,36 @@ export default function OrderCard({
         <div style={{ margin: "1rem 0", width: "100%" }}>
           <h3 className="mid secColor">Order Items:</h3>
           {orderItems?.map((item, index) => (
-            <div 
-              key={index} 
-              style={{ 
-                display: "flex", 
-                alignItems: "center", 
-                gap: "1rem", 
+            <div
+              key={index}
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: "1rem",
                 marginTop: "0.5rem",
                 padding: "1rem 0",
-                borderBottom: "1px solid #eee"
+                borderBottom: "1px solid #eee",
               }}
             >
               <div className="logo-placeholder" style={{ flexShrink: 0 }}>
-                <img 
-                  className="footerLogo" 
+                <img
+                  className="footerLogo"
                   src={item.productImage}
                   alt={item.productName}
                   style={{ objectFit: "cover" }}
                 />
               </div>
-              <div style={{ flex: 1 , display:'flex', flexDirection:'column', gap:'.4rem'}}>
+              <div
+                style={{
+                  flex: 1,
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: ".4rem",
+                }}
+              >
                 <h2 className="mid priColor">{item.productName}</h2>
                 <p className="small gray">Quantity: {item.productQuantity}</p>
-                <p className="small secColor">
-                  {item.productPrice} JD
-                </p>
+                <p className="small secColor">{item.productPrice} JD</p>
               </div>
             </div>
           ))}
@@ -102,7 +144,11 @@ export default function OrderCard({
         >
           Confirm
         </button>
-        <button className="secBtn small" disabled={isLoading}>
+        <button
+          className="secBtn small"
+          onClick={() => handleDelete(id)}
+          disabled={isLoading}
+        >
           Delete
         </button>
       </div>

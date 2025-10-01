@@ -19,13 +19,13 @@ app.use(express.json());
 app.use(cors())
 
 // Debug middleware to check if body is being parsed
-app.use((req, res, next) => {
-    console.log('Request Method:', req.method);
-    console.log('Request URL:', req.url);
-    console.log('Request Body:', req.body);
-    console.log('Content-Type:', req.get('Content-Type'));
-    next();
-});
+// app.use((req, res, next) => {
+//     console.log('Request Method:', req.method);
+//     console.log('Request URL:', req.url);
+//     console.log('Request Body:', req.body);
+//     console.log('Content-Type:', req.get('Content-Type'));
+//     next();
+// });
 
 mongoose
   .connect(process.env.DATABASE_URL)

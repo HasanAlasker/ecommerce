@@ -6,6 +6,7 @@ import {
   getAllOrders,
   updateOrderStatus,
   deleteOrder 
+  ,cancelOrder
 } from "../services/orderServices.js";
 import validateJWT from "../middlewares/validateJWT.js";
 
@@ -48,6 +49,12 @@ router.patch("/:id/status", validateJWT, async (req, res) => {
 router.delete("/:id", validateJWT, async (req, res) => {
   // Add admin check here
   const { data, statusCode } = await deleteOrder(req.params.id);
+  res.status(statusCode).json(data);
+});
+
+// Cancel order and restore stock
+router.delete("/:id/cancel", validateJWT, async (req, res) => {
+  const { data, statusCode } = await cancelOrder(req.params.id);
   res.status(statusCode).json(data);
 });
 
