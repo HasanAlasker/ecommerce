@@ -59,13 +59,13 @@ export default function Home() {
 
   return (
     <>
-      {/* <Banner /> */}
+      <Banner />
       {products.length === 0 && !isAdmin ? (
         <h2 style={{textAlign:'center', color:'#a39e9e'}} className="alone">
           There are no products to show!
         </h2>
       ) : (
-        <div className="card-cont">
+        <div className="card-cont" id="collection">
           {isAdmin && (
             <Card 
               addCard 

@@ -22,6 +22,7 @@
 }
 html {
   scroll-behavior: smooth;
+  scroll-padding-top: 100px;
 }
 body {
   background-color: var(--background);
@@ -151,6 +152,7 @@ nav {
   white-space: nowrap;
   font-family: "Inter", sans-serif;
   width: 50%;
+  max-width: 14rem;
 }
 .square:hover {
   transform: translateY(-2px);
@@ -168,20 +170,323 @@ nav {
 /* ------------------ Banner ---------------- */
 
 .banner {
+  position: relative;
   width: 90%;
+  max-width: 1400px;
+  height: 600px;
   margin: 0 auto;
-  background: var(--primary);
-  aspect-ratio: 1/0.23;
-  margin-bottom: 3rem;
+  background: linear-gradient(135deg, #ff6b9d 0%, #f48aa8 50%, #f67280 100%);
+  border-radius: 30px;
   overflow: hidden;
-  border-radius: 15px;
-
-  box-shadow: 0px 10px 50px 0px rgba(198, 198, 198, 0.75);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
 }
-.bannerImage {
+
+.banner-content {
+  position: relative;
+  z-index: 2;
+  padding: 80px 100px;
+  max-width: 50%;
+}
+
+.banner h1 {
+  font-size: 62px;
+  font-weight: 700;
+  color: white;
+  line-height: 1.2;
+  margin-bottom: 30px;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.banner p {
+  font-size: 18px;
+  color: rgba(255, 255, 255, 0.95);
+  line-height: 1.6;
+  margin-bottom: 40px;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.cta-button {
+  display: inline-block;
+  padding: 18px 45px;
+  background: white;
+  color: #c06c84;
+  font-size: 18px;
+  font-weight: 600;
+  border-radius: 50px;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.cta-button:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+  background: #fff5f7;
+}
+
+.flower-image {
+  position: absolute;
+  right: 100px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 500px;
+  height: 500px;
+  background: white;
+  border-radius: 50%;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.flower-circle {
   width: 100%;
-  aspect-ratio: 1/0.23;
-  object-fit: cover;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: radial-gradient(circle, #fff 0%, #ffe6f0 100%);
+}
+
+.flower {
+  font-size: 280px;
+  animation: rotate 20s linear infinite;
+}
+
+.decorative-element {
+  position: absolute;
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  opacity: 0.15;
+}
+
+.element1 {
+  top: -50px;
+  left: 40%;
+  background: white;
+  animation: float 6s ease-in-out infinite;
+}
+
+.element2 {
+  bottom: -30px;
+  left: 20%;
+  background: white;
+  width: 100px;
+  height: 100px;
+  animation: float 8s ease-in-out infinite reverse;
+}
+
+.element3 {
+  top: 100px;
+  right: 30%;
+  background: white;
+  width: 80px;
+  height: 80px;
+  animation: float 7s ease-in-out infinite;
+}
+
+@keyframes rotate {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-20px);
+  }
+}
+
+.small-flowers {
+  position: absolute;
+  left: 50px;
+  top: 80px;
+  font-size: 60px;
+  opacity: 0.3;
+}
+
+@media (max-width: 1400px) {
+  .banner-content {
+    padding: 60px 60px;
+  }
+
+  .banner h1 {
+    font-size: 60px;
+  }
+
+  .flower-image {
+    width: 420px;
+    height: 420px;
+    right: 60px;
+  }
+}
+
+@media (max-width: 1200px) {
+  .banner {
+    height: 500px;
+  }
+
+  .banner-content {
+    padding: 50px 50px;
+    max-width: 55%;
+  }
+
+  .banner h1 {
+    font-size: 52px;
+  }
+
+  .banner p {
+    font-size: 16px;
+  }
+
+  .flower-image {
+    width: 380px;
+    height: 380px;
+    right: 50px;
+  }
+
+  .flower {
+    font-size: 200px;
+  }
+}
+
+@media (max-width: 992px) {
+  .banner {
+    height: 450px;
+  }
+
+  .banner-content {
+    padding: 40px;
+    max-width: 60%;
+  }
+
+  .banner h1 {
+    font-size: 44px;
+  }
+
+  .banner p {
+    font-size: 15px;
+    margin-bottom: 30px;
+  }
+
+  .flower-image {
+    width: 320px;
+    height: 320px;
+    right: 40px;
+  }
+
+  .flower {
+    font-size: 170px;
+  }
+
+  .cta-button {
+    padding: 15px 35px;
+    font-size: 16px;
+  }
+}
+
+@media (max-width: 768px) {
+  .banner {
+    height: auto;
+    padding-bottom: 360px;
+  }
+
+  .banner-content {
+    max-width: 100%;
+    padding: 40px 30px 20px 30px;
+  }
+
+  .banner h1 {
+    font-size: 38px;
+    margin-bottom: 20px;
+  }
+
+  .banner p {
+    font-size: 15px;
+    margin-bottom: 25px;
+  }
+
+  .flower-image {
+    width: 300px;
+    height: 300px;
+    left: 50%;
+    right: auto;
+    top: auto;
+    bottom: 30px;
+    transform: translateX(-50%);
+  }
+
+  .flower {
+    font-size: 160px;
+  }
+
+  .small-flowers {
+    font-size: 50px;
+    left: 30px;
+    top: 60px;
+  }
+}
+
+@media (max-width: 576px) {
+  .banner {
+    border-radius: 20px;
+    padding-bottom: 320px;
+  }
+
+  .banner-content {
+    padding: 30px 25px 20px 25px;
+  }
+
+  .banner h1 {
+    font-size: 32px;
+    margin-bottom: 15px;
+  }
+
+  .banner p {
+    font-size: 14px;
+    margin-bottom: 20px;
+  }
+
+  .cta-button {
+    padding: 14px 30px;
+    font-size: 15px;
+  }
+
+  .flower-image {
+    width: 260px;
+    height: 260px;
+    bottom: 20px;
+  }
+
+  .flower {
+    font-size: 140px;
+  }
+
+  .decorative-element {
+    width: 100px;
+    height: 100px;
+  }
+
+  .element2,
+  .element3 {
+    width: 60px;
+    height: 60px;
+  }
+
+  .small-flowers {
+    font-size: 40px;
+    left: 20px;
+    top: 50px;
+  }
 }
 
 /* ------------------ Card ---------------- */
@@ -1202,6 +1507,9 @@ nav {
   .nav-cont {
     width: 80%;
   }
+  .banner {
+    width: 80%;
+  }
 }
 
 @media (min-width: 1620px) {
@@ -1217,6 +1525,9 @@ nav {
     width: 70%;
   }
   .nav-cont {
+    width: 70%;
+  }
+  .banner {
     width: 70%;
   }
 }
