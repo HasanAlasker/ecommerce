@@ -3,7 +3,6 @@ import { BASE_URL } from "../constants/baseUrl";
 import { useAuth } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { useCart } from "../context/CartContext";
-import { updateProduct } from "../api/updateProduct";
 
 const createProduct = async (data) => {
   try {
@@ -43,6 +42,35 @@ const deleteProduct = async (id) => {
   }
 };
 
+const updateProduct = async (id, data, token) => {
+  // Add token parameter
+  try {
+    console.log(`Updating product at: ${BASE_URL}/products/${id}`);
+
+    const response = await fetch(`${BASE_URL}/products/${id}`, {
+      method: "PUT",
+      body: JSON.stringify(data),
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`, // ADD THIS LINE
+      },
+    });
+
+    console.log("Response status:", response.status);
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error("Server error response:", errorText);
+      throw new Error(`HTTP error! status: ${response.status} - ${errorText}`);
+    }
+
+    return await response.json();
+  } catch (error) {
+    console.error("Error updating Product:", error);
+    throw error;
+  }
+};
+
 export default function Card({
   id,
   name,
@@ -71,7 +99,7 @@ export default function Card({
   );
   const [editStock, setEditStock] = useState(stock || "");
   const [editImage, setEditImage] = useState(image || "");
-  const { user } = useAuth();
+  const { user, token } = useAuth();
   const { addToCart, removeFromCart } = useCart();
 
   const handleSave = async () => {
@@ -92,6 +120,9 @@ export default function Card({
         }),
       };
 
+      console.log("Sending product data:", productData);
+      console.log("Product ID:", id);
+
       if (addCard) {
         const newProduct = await createProduct(productData);
         console.log("Product created:", newProduct);
@@ -108,7 +139,7 @@ export default function Card({
         setEditStock("");
         setEditImage("");
       } else {
-        const updatedProduct = await updateProduct(id, productData);
+        const updatedProduct = await updateProduct(id, productData, token); 
         console.log("Product updated:", updatedProduct);
 
         alert("Product updated successfully!");
@@ -120,8 +151,9 @@ export default function Card({
         setIsEditing(false);
       }
     } catch (error) {
-      console.error("Error saving product:", error);
-      alert("Failed to save product. Please try again.");
+      console.error("Full error object:", error);
+      console.error("Error message:", error.message);
+      alert(`Failed to save product: ${error.message}`);
     } finally {
       setIsLoading(false);
     }
@@ -177,44 +209,43 @@ export default function Card({
   // };
 
   const handleAddToCart = async (id) => {
-  if (!user) {
-    navigate("/login");
-    return;
-  }
-  
-  setIsLoading(true);
-  try {
-    const success = await addToCart(id, 1); // Add quantity as second param
-    if (success) {
-      alert("Added to cart!");
-    } else {
-      alert("Failed to add to cart");
+    if (!user) {
+      navigate("/login");
+      return;
     }
-  } catch (error) {
-    console.error("Error adding to cart:", error);
-    alert("Error adding to cart");
-  } finally {
-    setIsLoading(false);
-  }
-};
+
+    setIsLoading(true);
+    try {
+      const success = await addToCart(id, 1); // Add quantity as second param
+      if (success) {
+        alert("Added to cart!");
+      } else {
+        alert("Failed to add to cart");
+      }
+    } catch (error) {
+      console.error("Error adding to cart:", error);
+      alert("Error adding to cart");
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   const handleRemove = async (id) => {
-
-  setIsLoading(true);
-  try {
-    const success = await removeFromCart(id); // Add quantity as second param
-    if (success) {
-      alert("Removed from cart!");
-    } else {
-      alert("Failed to remove from cart");
+    setIsLoading(true);
+    try {
+      const success = await removeFromCart(id); // Add quantity as second param
+      if (success) {
+        alert("Removed from cart!");
+      } else {
+        alert("Failed to remove from cart");
+      }
+    } catch (error) {
+      console.error("Error removing from cart:", error);
+      alert("Error removing from cart");
+    } finally {
+      setIsLoading(false);
     }
-  } catch (error) {
-    console.error("Error removing from cart:", error);
-    alert("Error removing from cart");
-  } finally {
-    setIsLoading(false);
-  }
-};
+  };
 
   const quantityOptions = [];
   for (let i = 1; i <= Math.min(stock || 10, 10); i++) {
@@ -381,7 +412,7 @@ export default function Card({
         <button
           className={disableAddToCart() ? "disBtn small" : "priBtn small"}
           disabled={disableAddToCart()}
-          onClick={()=>handleAddToCart(id)}
+          onClick={() => handleAddToCart(id)}
         >
           {disableAddToCart() ? "Out of stock" : "Add to cart"}
         </button>
@@ -390,7 +421,7 @@ export default function Card({
 
     if (cardTypes.CUSTOMER_CART) {
       return (
-        <button className="priBtn small" onClick={()=> handleRemove(id)}>
+        <button className="priBtn small" onClick={() => handleRemove(id)}>
           Remove
         </button>
       );

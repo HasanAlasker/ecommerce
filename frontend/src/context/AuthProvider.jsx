@@ -208,9 +208,9 @@ const AuthProvider = ({children}) => {
     }, [])
 
     // Debug: Log state changes
-    // useEffect(() => {
-    //     console.log("🔍 Auth state changed:", { user, token, isInitialized });
-    // }, [user, token, isInitialized])
+    useEffect(() => {
+        console.log("🔍 Auth state changed:", { user, token, isInitialized });
+    }, [user, token, isInitialized])
 
     const value = {
         user,

@@ -1,5 +1,7 @@
 import logo from "../assets/pics/navLogo.png";
 import { useAuth } from "../context/AuthContext";
+import { useCart } from "../context/CartContext";
+import { useOrder } from "../context/OrderContext";
 
 function Nav() {
   //   const [activeSection, setActiveSection] = useState("home");
@@ -36,6 +38,10 @@ function Nav() {
   //   }, []);
 
   const { user, logout } = useAuth();
+  const { cart } = useCart();
+  const { orderCount } = useOrder();
+
+
 
   return (
     <>
@@ -46,7 +52,7 @@ function Nav() {
           </a>
 
           {/* <h2 className="priColor mid">
-            Welcome {user ? `back ${user.fullName}` : "Guest"}
+            {cart && <div>{cart.totalItems}</div>}
           </h2> */}
 
           <div style={{ display: "flex", alignItems: "center", gap: ".5rem" }}>
@@ -81,6 +87,9 @@ function Nav() {
                   <span className="material-symbols-outlined priColor smallIcon">
                     receipt
                   </span>
+                  {orderCount >= 1 && (
+                    <div className="notification">{orderCount}</div>
+                  )}
                 </div>
               </a>
             )}
@@ -98,6 +107,9 @@ function Nav() {
                   <span className="material-symbols-outlined priColor smallIcon">
                     shopping_cart
                   </span>
+                  {cart && cart.totalItems >= 1 && (
+                    <div className="notification">{cart.totalItems}</div>
+                  )}
                 </div>
               </a>
             )}

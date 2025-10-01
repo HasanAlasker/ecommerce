@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { BASE_URL } from "../constants/baseUrl";
 import { useAuth } from "../context/AuthContext";
+import { useOrder } from "../context/OrderContext";
 
 export default function OrderCard({
   userName,
@@ -14,6 +15,7 @@ export default function OrderCard({
 }) {
   const { token } = useAuth();
   const [isLoading, setIsLoading] = useState(false);
+  const { removeOrder } = useOrder();
 
   // remove from database
   const handleConfirm = async () => {
@@ -39,6 +41,7 @@ export default function OrderCard({
       }
 
       alert("Order confirmed successfully!");
+      removeOrder(id)
 
       // Notify parent to remove this order from the list
       if (onDelete) {
@@ -76,6 +79,7 @@ export default function OrderCard({
       }
 
       alert("Order cancelled and stock restored successfully!");
+      removeOrder(id)
 
       if (onDelete) {
         onDelete(id);
