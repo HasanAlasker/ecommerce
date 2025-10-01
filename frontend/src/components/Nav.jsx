@@ -3,7 +3,7 @@ import { useAuth } from "../context/AuthContext";
 import { useCart } from "../context/CartContext";
 import { useOrder } from "../context/OrderContext";
 
-function Nav() {
+function Nav({ onMenuOpen }) {
   //   const [activeSection, setActiveSection] = useState("home");
 
   //   useEffect(() => {
@@ -41,8 +41,6 @@ function Nav() {
   const { cart } = useCart();
   const { orderCount } = useOrder();
 
-
-
   return (
     <>
       <nav>
@@ -55,7 +53,7 @@ function Nav() {
             {cart && <div>{cart.totalItems}</div>}
           </h2> */}
 
-          <div style={{ display: "flex", alignItems: "center", gap: ".5rem" }}>
+          <div className="hidden" style={{}}>
             {!user && (
               <a href="/login">
                 <div
@@ -135,6 +133,12 @@ function Nav() {
               </button>
             )}
           </div>
+          <span
+            className="material-symbols-outlined priColor menu"
+            onClick={onMenuOpen}
+          >
+            dehaze
+          </span>
         </div>
       </nav>
     </>

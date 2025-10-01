@@ -12,14 +12,27 @@ import AuthRoute from "./components/AuthRoute";
 import AdminRoute from "./components/AdminRoute";
 import CartProvider from "./context/CartProvider";
 import OrderProvider from "./context/OrderProvider";
+import { useState } from "react";
+import Menu from "./components/Menu";
 
 function App() {
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  const openMenu = () => {
+    setIsMenuOpen(true);
+  };
+
+  const closeMenu = () => {
+    setIsMenuOpen(false);
+  };
+
   return (
     <AuthProvider>
       <CartProvider>
         <OrderProvider>
           <BrowserRouter>
-            <Nav></Nav>
+            <Nav onMenuOpen={openMenu}></Nav>
+            <Menu isOpen={isMenuOpen} onClose={closeMenu} />
             <Routes>
               <Route path="/" element={<Home />} />
               <Route path="/login" element={<Login />} />
