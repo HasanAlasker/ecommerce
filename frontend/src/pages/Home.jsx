@@ -4,6 +4,7 @@ import Card from "../components/Card";
 import Banner from "../components/Banner";
 import { BASE_URL } from "../constants/baseUrl";
 import { useAuth } from "../context/AuthContext";
+import OrderCard from "../components/OrderCard";
 
 export default function Home() {
   const [products, setProducts] = useState([]);
