@@ -499,7 +499,7 @@ nav {
   padding: 1.25rem;
   border-radius: 1.25rem;
   width: 100%;
-  max-width: 350px;
+  max-width: 450px;
   margin: 0 auto;
   gap: 1.5rem;
   border: 1px solid rgba(32, 32, 32, 0.08);
@@ -680,12 +680,11 @@ nav {
 .card-cont {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
-  gap: 2rem;
+  gap: 1.5rem;
   position: relative;
-  width: 100%;
+  width: 90%;
   max-width: 1400px;
   margin: 3rem auto 6rem auto;
-  padding: 0 1rem;
 }
 
 /* ------------Form------------ */
@@ -1294,12 +1293,7 @@ nav {
   }
 }
 
-@media (min-width: 760px) {
-  .card-cont {
-    grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
-    width: 90%;
-  }
-}
+
 /* --------------------------------------------menu---------------------------------------------------- */
 
 /* Hamburger Menu Styles */
@@ -1499,7 +1493,7 @@ nav {
 @media (min-width: 1120px) {
   .card-cont {
     grid-template-columns: repeat(auto-fit, minmax(19rem, 1fr));
-    width: 85%;
+    width: 80%;
   }
 
   .footer-container {
@@ -1510,6 +1504,7 @@ nav {
   }
   .nav-cont {
     width: 80%;
+    gap: 2rem;
   }
   .banner {
     width: 80%;
@@ -1519,7 +1514,8 @@ nav {
 @media (min-width: 1620px) {
   .card-cont {
     grid-template-columns: repeat(auto-fit, minmax(19rem, 1fr));
-    width: 75%;
+    width: 70%;
+    gap: 3rem;
   }
 
   .footer-container {
