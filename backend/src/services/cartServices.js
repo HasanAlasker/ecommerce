@@ -151,89 +151,96 @@ export const deleteItemInCart = async ({ userId, productId }) => {
 };
 
 export const checkout = async ({ userId }) => {
-  if (!userId) {
-    return { data: { message: "User id required!" }, statusCode: 400 };
-  }
-
-  const cart = await cartModel.findOne({ userId, status: "active" });
-
-  if (!cart) {
-    return { data: { message: "Cart not found!" }, statusCode: 404 };
-  }
-
-  if (cart.items.length === 0) {
-    return { data: { message: "Cart is empty!" }, statusCode: 400 };
-  }
-
-  // Check stock availability for all items
-  const outOfStockItems = [];
-  
-  for (const item of cart.items) {
-    const product = await productModel.findById(item.productId);
+  try {
+    const cart = await getActiveCartForUser({ userId });
     
-    if (!product) {
-      outOfStockItems.push({
-        name: item.name,
-        requested: item.quantity,
-        available: 0
-      });
-      continue;
+    if (!cart.items || cart.items.length === 0) {
+      return { data: "Cart is empty", statusCode: 400 };
     }
-    
-    if (product.stock < item.quantity) {
-      outOfStockItems.push({
-        name: product.name,
-        requested: item.quantity,
-        available: product.stock
-      });
-    }
-  }
 
-  // If any items are out of stock, return error
-  if (outOfStockItems.length > 0) {
-    return {
-      statusCode: 400,
-      data: {
-        message: "Some items are no longer available",
-        outOfStockItems
+    const user = await usersModel.findById(userId);
+    if (!user) {
+      return { data: "User not found", statusCode: 404 };
+    }
+
+    if (!user.address) {
+      return { data: "User address not found", statusCode: 400 };
+    }
+
+    // Check stock availability and track unavailable items
+    const outOfStockItems = [];
+    const orderItems = [];
+
+    for (const item of cart.items) {
+      const product = await productModel.findById(item.productId);
+      
+      if (!product) {
+        outOfStockItems.push({
+          name: item.name,
+          requested: item.quantity,
+          available: 0,
+          reason: "Product no longer exists"
+        });
+        continue;
       }
-    };
+
+      if (product.stock < item.quantity) {
+        outOfStockItems.push({
+          name: product.name,
+          requested: item.quantity,
+          available: product.stock,
+          reason: "Insufficient stock"
+        });
+        continue;
+      }
+
+      // Product is available, prepare order item
+      const orderItem = {
+        productName: product.name,    
+        productImage: product.image,
+        productQuantity: item.quantity, 
+        productPrice: product.discountedPrice || product.price,
+      };
+
+      orderItems.push(orderItem);
+    }
+
+    // If any items are out of stock, return error with details
+    if (outOfStockItems.length > 0) {
+      return { 
+        data: {
+          message: "Some items are no longer available",
+          outOfStockItems
+        },
+        statusCode: 400 
+      };
+    }
+
+    // All items are available, create the order
+    const order = await orderModel.create({
+      orderItems,
+      userId,
+      total: cart.totalAmount,
+      address: user.address,
+      userName: user.fullName,
+      userPhone: user.phone,
+      userEmail: user.email
+    });
+
+    // Update product stock after order creation
+    for (const item of cart.items) {
+      await productModel.findByIdAndUpdate(item.productId, {
+        $inc: { stock: -item.quantity }
+      });
+    }
+
+    // Clear the cart after successful order creation
+    await clearCart({ userId });
+
+    return { data: order, statusCode: 200 };
+
+  } catch (error) {
+    console.error("Error in checkout:", error);
+    return { data: "Internal server error", statusCode: 500 };
   }
-
-  // Deduct stock from products
-  for (const item of cart.items) {
-    await productModel.findByIdAndUpdate(
-      item.productId,
-      { $inc: { stock: -item.quantity } }
-    );
-  }
-
-  // Create order
-  const orderItems = cart.items.map((item) => ({
-    productId: item.productId,
-    name: item.name,
-    image: item.image,
-    quantity: item.quantity,
-    price: item.price,
-  }));
-
-  const order = await orderModel.create({
-    userId,
-    items: orderItems,
-    totalAmount: cart.totalAmount,
-  });
-
-  await order.save();
-
-  cart.status = "completed";
-  await cart.save();
-
-  // CHANGED: Return proper format with message
-  return { 
-    data: { 
-      message: "Order placed successfully",
-      order: order 
-    }, 
-    statusCode: 200 
-  };
 };
