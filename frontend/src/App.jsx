@@ -14,6 +14,7 @@ import CartProvider from "./context/CartProvider";
 import OrderProvider from "./context/OrderProvider";
 import { useState } from "react";
 import Menu from "./components/Menu";
+import ScrollToTop from "./components/ScrollToTop";
 
 function App() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -31,6 +32,7 @@ function App() {
       <CartProvider>
         <OrderProvider>
           <BrowserRouter>
+          <ScrollToTop />
             <Nav onMenuOpen={openMenu}></Nav>
             <Menu isOpen={isMenuOpen} onClose={closeMenu} />
             <Routes>

@@ -48,9 +48,9 @@ export default function Cart() {
       setIsClearing(true);
       await clearCart();
     } catch {
-      alert('Something went wrong')
+      alert("Something went wrong");
     }
-    setIsClearing(false)
+    setIsClearing(false);
   };
 
   if (!token) {
@@ -108,9 +108,22 @@ export default function Cart() {
               >
                 {!isCheckingOut ? "Confirm" : "Confirming..."}
               </button>
-              <button disabled={isCheckingOut || isClearing} className={!isClearing?"square secSq mid":"square secSq disSeq mid" } onClick={handleClear}>
+              <button
+                disabled={isCheckingOut || isClearing}
+                className={
+                  !isClearing ? "square secSq mid" : "square secSq disSeq mid"
+                }
+                onClick={handleClear}
+              >
                 {!isClearing ? "Clear cart" : "Clearing Cart..."}
               </button>
+            </div>
+            <br />
+            <div style={{display:'flex' ,alignItems:'center'}}>
+              <span style={{paddingBottom:'7px'}}>💵 </span>
+              <span className="small gray ">
+                 Payment method: Cash on delivery
+              </span>
             </div>
           </div>
         </>
