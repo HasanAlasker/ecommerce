@@ -152,20 +152,20 @@ export const deleteItemInCart = async ({ userId, productId }) => {
 
 export const checkout = async ({ userId }) => {
   if (!userId) {
-    return { data: "User id required!", statusCode: 400 };
+    return { data: { message: "User id required!" }, statusCode: 400 };
   }
 
   const cart = await cartModel.findOne({ userId, status: "active" });
 
   if (!cart) {
-    return { data: "Cart not found!", statusCode: 404 };
+    return { data: { message: "Cart not found!" }, statusCode: 404 };
   }
 
   if (cart.items.length === 0) {
-    return { data: "Cart is empty!", statusCode: 400 };
+    return { data: { message: "Cart is empty!" }, statusCode: 400 };
   }
 
-  // ADDED: Check stock availability for all items
+  // Check stock availability for all items
   const outOfStockItems = [];
   
   for (const item of cart.items) {
@@ -189,7 +189,7 @@ export const checkout = async ({ userId }) => {
     }
   }
 
-  // ADDED: If any items are out of stock, return error
+  // If any items are out of stock, return error
   if (outOfStockItems.length > 0) {
     return {
       statusCode: 400,
@@ -200,7 +200,7 @@ export const checkout = async ({ userId }) => {
     };
   }
 
-  // ADDED: Deduct stock from products
+  // Deduct stock from products
   for (const item of cart.items) {
     await productModel.findByIdAndUpdate(
       item.productId,
@@ -208,7 +208,7 @@ export const checkout = async ({ userId }) => {
     );
   }
 
-  // Original order creation code
+  // Create order
   const orderItems = cart.items.map((item) => ({
     productId: item.productId,
     name: item.name,
@@ -228,5 +228,12 @@ export const checkout = async ({ userId }) => {
   cart.status = "completed";
   await cart.save();
 
-  return { data: order, statusCode: 200 };
+  // CHANGED: Return proper format with message
+  return { 
+    data: { 
+      message: "Order placed successfully",
+      order: order 
+    }, 
+    statusCode: 200 
+  };
 };
