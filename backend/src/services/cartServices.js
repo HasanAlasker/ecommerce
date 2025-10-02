@@ -151,64 +151,82 @@ export const deleteItemInCart = async ({ userId, productId }) => {
 };
 
 export const checkout = async ({ userId }) => {
-  try {
-    const cart = await cartModel
-      .findOne({ userId, status: "active" })
-      .populate("items.productId");
+  if (!userId) {
+    return { data: "User id required!", statusCode: 400 };
+  }
 
-    if (!cart || cart.items.length === 0) {
-      return { 
-        statusCode: 400, 
-        data: { message: "Cart is empty" } 
-      };
-    }
+  const cart = await cartModel.findOne({ userId, status: "active" });
 
-    // Check stock
-    const outOfStockItems = [];
+  if (!cart) {
+    return { data: "Cart not found!", statusCode: 404 };
+  }
+
+  if (cart.items.length === 0) {
+    return { data: "Cart is empty!", statusCode: 400 };
+  }
+
+  // ADDED: Check stock availability for all items
+  const outOfStockItems = [];
+  
+  for (const item of cart.items) {
+    const product = await productModel.findById(item.productId);
     
-    for (const item of cart.items) {
-      const product = await productModel.findById(item.productId._id);
-      
-      if (!product || product.stock < item.quantity) {
-        outOfStockItems.push({
-          name: item.productId.name,
-          requested: item.quantity,
-          available: product ? product.stock : 0
-        });
+    if (!product) {
+      outOfStockItems.push({
+        name: item.name,
+        requested: item.quantity,
+        available: 0
+      });
+      continue;
+    }
+    
+    if (product.stock < item.quantity) {
+      outOfStockItems.push({
+        name: product.name,
+        requested: item.quantity,
+        available: product.stock
+      });
+    }
+  }
+
+  // ADDED: If any items are out of stock, return error
+  if (outOfStockItems.length > 0) {
+    return {
+      statusCode: 400,
+      data: {
+        message: "Some items are no longer available",
+        outOfStockItems
       }
-    }
-
-    if (outOfStockItems.length > 0) {
-      return {
-        statusCode: 400,
-        data: {
-          message: "Some items are no longer available",
-          outOfStockItems
-        }
-      };
-    }
-
-    // Process checkout...
-    for (const item of cart.items) {
-      await productModel.findByIdAndUpdate(
-        item.productId._id,
-        { $inc: { stock: -item.quantity } }
-      );
-    }
-
-    // Create order (you'll need an orders model)
-    cart.status = "completed";
-    await cart.save();
-
-    return {
-      statusCode: 200,
-      data: { message: "Order placed successfully" }
-    };
-  } catch (error) {
-    console.error("Checkout service error:", error);
-    return {
-      statusCode: 500,
-      data: { message: "Checkout failed: " + error.message }
     };
   }
+
+  // ADDED: Deduct stock from products
+  for (const item of cart.items) {
+    await productModel.findByIdAndUpdate(
+      item.productId,
+      { $inc: { stock: -item.quantity } }
+    );
+  }
+
+  // Original order creation code
+  const orderItems = cart.items.map((item) => ({
+    productId: item.productId,
+    name: item.name,
+    image: item.image,
+    quantity: item.quantity,
+    price: item.price,
+  }));
+
+  const order = await orderModel.create({
+    userId,
+    items: orderItems,
+    totalAmount: cart.totalAmount,
+  });
+
+  await order.save();
+
+  cart.status = "completed";
+  await cart.save();
+
+  return { data: order, statusCode: 200 };
 };
