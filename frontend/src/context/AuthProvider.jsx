@@ -34,7 +34,7 @@ const AuthProvider = ({children}) => {
                 const token = data.token;
                 const user = data.user;
                 
-                console.log("🔍 Extracted values:", { token, user });
+                // console.log("🔍 Extracted values:", { token, user });
                 
                 if (!token) {
                     console.error("❌ No token found in response");
@@ -208,9 +208,9 @@ const AuthProvider = ({children}) => {
     }, [])
 
     // Debug: Log state changes
-    useEffect(() => {
-        console.log("🔍 Auth state changed:", { user, token, isInitialized });
-    }, [user, token, isInitialized])
+    // useEffect(() => {
+    //     console.log("🔍 Auth state changed:", { user, token, isInitialized });
+    // }, [user, token, isInitialized])
 
     const value = {
         user,

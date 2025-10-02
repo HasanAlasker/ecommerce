@@ -2,33 +2,55 @@ import { useAuth } from "../context/AuthContext";
 import { BASE_URL } from "../constants/baseUrl";
 import Card from "../components/Card";
 import { useCart } from "../context/CartContext";
+import { useState } from "react";
 
 export default function Cart() {
   const { token, user } = useAuth();
   const { cart, loading, clearCart, checkout } = useCart();
 
+  const [isCheckingOut, setIsCheckingOut] = useState(false);
+  const [isClearing, setIsClearing] = useState(false);
+
   const handleCheckout = async () => {
-    const result = await checkout(user._id);
-    
-    if (result.success) {
-      alert("Order placed successfully!");
-    } else {
-      // Show detailed out of stock message
-      if (result.outOfStockItems && result.outOfStockItems.length > 0) {
-        const itemsList = result.outOfStockItems
-          .map(item => {
-            if (item.available !== undefined) {
-              return `${item.name}: Only ${item.available} left (you requested ${item.requested})`;
-            }
-            return `${item.name}: ${item.reason}`;
-          })
-          .join('\n');
-        
-        alert(`${result.message}\n\n${itemsList}`);
+    setIsCheckingOut(true);
+
+    try {
+      const result = await checkout(user._id);
+
+      if (result.success) {
+        alert("Order placed successfully!");
       } else {
-        alert(result.message || "Checkout failed");
+        // Show detailed out of stock message
+        if (result.outOfStockItems && result.outOfStockItems.length > 0) {
+          const itemsList = result.outOfStockItems
+            .map((item) => {
+              if (item.available !== undefined) {
+                return `${item.name}: Only ${item.available} left (you requested ${item.requested})`;
+              }
+              return `${item.name}: ${item.reason}`;
+            })
+            .join("\n");
+
+          alert(`${result.message}\n\n${itemsList}`);
+        } else {
+          alert(result.message || "Checkout failed");
+        }
       }
+    } catch {
+      alert("An error occurred during checkout. Please try again.");
+    } finally {
+      setIsCheckingOut(false);
     }
+  };
+
+  const handleClear = async () => {
+    try {
+      setIsClearing(true);
+      await clearCart();
+    } catch {
+      alert('Something went wrong')
+    }
+    setIsClearing(false)
   };
 
   if (!token) {
@@ -78,12 +100,16 @@ export default function Cart() {
                 Total Price: {cart.totalAmount} JD
               </p>
             </div>
-            <div className="ctaCard" style={{width:'100%'}}>
-              <button className="square mid" onClick={handleCheckout}>
-                Confirm
+            <div className="ctaCard" style={{ width: "100%" }}>
+              <button
+                disabled={isCheckingOut}
+                className={!isCheckingOut ? "square mid" : "square mid disSeq"}
+                onClick={handleCheckout}
+              >
+                {!isCheckingOut ? "Confirm" : "Confirming..."}
               </button>
-              <button className="square secSq mid" onClick={clearCart}>
-                Clear cart
+              <button className={!isClearing?"square secSq mid":"square secSq disSeq mid" } onClick={handleClear}>
+                {!isClearing ? "Clear cart" : "Clearing Cart..."}
               </button>
             </div>
           </div>

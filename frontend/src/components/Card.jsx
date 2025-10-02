@@ -90,6 +90,7 @@ export default function Card({
   const [isEditing, setIsEditing] = useState(false);
   // const [selectedQuantity, setSelectedQuantity] = useState(quantity);
   const [isLoading, setIsLoading] = useState(false);
+  const [isRemoving, setIsRemoving] = useState(false);
   const navigate = useNavigate();
 
   const [editName, setEditName] = useState(name || "");
@@ -232,6 +233,7 @@ export default function Card({
 
   const handleRemove = async (id) => {
     setIsLoading(true);
+    setIsRemoving(true)
     try {
       const success = await removeFromCart(id); // Add quantity as second param
       if (success) {
@@ -244,6 +246,7 @@ export default function Card({
       alert("Error removing from cart");
     } finally {
       setIsLoading(false);
+      setIsRemoving(false)
     }
   };
 
@@ -401,7 +404,7 @@ export default function Card({
   // };
 
   const disableAddToCart = () => {
-    if (stock === 0 && !isAdmin) {
+    if (stock === 0 && !isAdmin ) {
       return true;
     }
     return false;
@@ -411,19 +414,20 @@ export default function Card({
     if (cardTypes.CUSTOMER_PRODUCT) {
       return (
         <button
-          className={disableAddToCart() ? "disBtn small" : "priBtn small"}
-          disabled={disableAddToCart()}
+          className={(disableAddToCart() || isLoading) ? "disBtn small" : "priBtn small"}
+          disabled={disableAddToCart()||isLoading}
           onClick={() => handleAddToCart(id)}
         >
-          {disableAddToCart() ? "Out of stock" : "Add to cart"}
+          {disableAddToCart() ? "Out of stock" : !isLoading ? "Add to cart" : "Adding to cart..."}
+          
         </button>
       );
     }
 
     if (cardTypes.CUSTOMER_CART) {
       return (
-        <button className="priBtn small" onClick={() => handleRemove(id)}>
-          Remove
+        <button className={!isRemoving ?"priBtn small" : "priBtn small disBtn"} disabled={isRemoving} onClick={() => handleRemove(id)}>
+          {!isRemoving ?"Remove" : "Removing..."}
         </button>
       );
     }

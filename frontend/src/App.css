@@ -154,6 +154,9 @@ nav {
   width: 50%;
   max-width: 14rem;
 }
+.disSeq {
+  opacity: 0.5;
+}
 .square:hover {
   transform: translateY(-2px);
   box-shadow: 0 8px 20px rgba(255, 56, 93, 0.35);
