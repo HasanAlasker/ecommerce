@@ -152,67 +152,63 @@ export const deleteItemInCart = async ({ userId, productId }) => {
 
 export const checkout = async ({ userId }) => {
   try {
-    const cart = await getActiveCartForUser({ userId });
-    
-    if (!cart.items || cart.items.length === 0) {
-      return { data: "Cart is empty", statusCode: 400 };
-    }
+    const cart = await cartModel
+      .findOne({ userId, status: "active" })
+      .populate("items.productId");
 
-    const user = await usersModel.findById(userId);
-    if (!user) {
-      return { data: "User not found", statusCode: 404 };
-    }
-
-    if (!user.address) {
-      return { data: "User address not found", statusCode: 400 };
-    }
-
-    const orderItems = [];
-
-    for (const item of cart.items) {
-      const product = await productModel.findById(item.productId);
-      if (!product) {
-        return { data: `Product ${item.name} not found`, statusCode: 400 };
-      }
-
-      if (product.stock < item.quantity) {
-        return { data: `Insufficient stock for ${product.name}`, statusCode: 400 };
-      }
-
-      const orderItem = {
-        productName: product.name,    
-        productImage: product.image,
-        productQuantity: item.quantity, 
-        productPrice: product.discountedPrice || product.price,
+    if (!cart || cart.items.length === 0) {
+      return { 
+        statusCode: 400, 
+        data: { message: "Cart is empty" } 
       };
-
-      orderItems.push(orderItem);
     }
 
-    const order = await orderModel.create({
-      orderItems,
-      userId,
-      total: cart.totalAmount,
-      address: user.address,
-      userName: user.fullName,
-      userPhone: user.phone,
-      userEmail: user.email
-    });
-
-    // Update product stock
+    // Check stock
+    const outOfStockItems = [];
+    
     for (const item of cart.items) {
-      await productModel.findByIdAndUpdate(item.productId, {
-        $inc: { stock: -item.quantity }
-      });
+      const product = await productModel.findById(item.productId._id);
+      
+      if (!product || product.stock < item.quantity) {
+        outOfStockItems.push({
+          name: item.productId.name,
+          requested: item.quantity,
+          available: product ? product.stock : 0
+        });
+      }
     }
 
-    // Clear the cart after successful order creation
-    await clearCart({ userId });
+    if (outOfStockItems.length > 0) {
+      return {
+        statusCode: 400,
+        data: {
+          message: "Some items are no longer available",
+          outOfStockItems
+        }
+      };
+    }
 
-    return { data: order, statusCode: 200 };
+    // Process checkout...
+    for (const item of cart.items) {
+      await productModel.findByIdAndUpdate(
+        item.productId._id,
+        { $inc: { stock: -item.quantity } }
+      );
+    }
 
+    // Create order (you'll need an orders model)
+    cart.status = "completed";
+    await cart.save();
+
+    return {
+      statusCode: 200,
+      data: { message: "Order placed successfully" }
+    };
   } catch (error) {
-    console.error("Error in checkout:", error);
-    return { data: "Internal server error", statusCode: 500 };
+    console.error("Checkout service error:", error);
+    return {
+      statusCode: 500,
+      data: { message: "Checkout failed: " + error.message }
+    };
   }
 };

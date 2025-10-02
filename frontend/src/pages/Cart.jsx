@@ -7,6 +7,30 @@ export default function Cart() {
   const { token, user } = useAuth();
   const { cart, loading, clearCart, checkout } = useCart();
 
+  const handleCheckout = async () => {
+    const result = await checkout(user._id);
+    
+    if (result.success) {
+      alert("Order placed successfully!");
+    } else {
+      // Show detailed out of stock message
+      if (result.outOfStockItems && result.outOfStockItems.length > 0) {
+        const itemsList = result.outOfStockItems
+          .map(item => {
+            if (item.available !== undefined) {
+              return `${item.name}: Only ${item.available} left (you requested ${item.requested})`;
+            }
+            return `${item.name}: ${item.reason}`;
+          })
+          .join('\n');
+        
+        alert(`${result.message}\n\n${itemsList}`);
+      } else {
+        alert(result.message || "Checkout failed");
+      }
+    }
+  };
+
   if (!token) {
     return <h1 className="xLarge center alone">Please login first!</h1>;
   }
@@ -55,7 +79,7 @@ export default function Cart() {
               </p>
             </div>
             <div className="ctaCard" style={{width:'100%'}}>
-              <button className="square mid" onClick={() => checkout(user._id)}>
+              <button className="square mid" onClick={handleCheckout}>
                 Confirm
               </button>
               <button className="square secSq mid" onClick={clearCart}>

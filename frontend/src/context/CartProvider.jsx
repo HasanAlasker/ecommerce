@@ -127,28 +127,36 @@ const CartProvider = ({ children }) => {
   };
 
   const checkout = async (userId) => {
-    if (!token) return false;
+  if (!token) return false;
 
-    try {
-      const response = await fetch(`${BASE_URL}/cart/checkout`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({ userId }),
-      });
+  try {
+    const response = await fetch(`${BASE_URL}/cart/checkout`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({ userId }),
+    });
 
-      if (response.ok) {
-        await fetchCart(); // Refresh cart
-        return true;
-      }
-      return false;
-    } catch (error) {
-      console.error("Failed to add to cart:", error);
-      return false;
+    const data = await response.json();
+
+    if (response.ok) {
+      await fetchCart(); // Refresh cart
+      return { success: true, message: data.message };
+    } else {
+      // Return the error with out of stock details
+      return { 
+        success: false, 
+        message: data.message,
+        outOfStockItems: data.outOfStockItems 
+      };
     }
-  };
+  } catch (error) {
+    console.error("Failed to checkout:", error);
+    return { success: false, message: "Checkout failed" };
+  }
+};
 
   // Initialize cart on mount
   useEffect(() => {
