@@ -12,32 +12,79 @@ import cors from 'cors'
 dotenv.config()
 
 const app = express();
-const port = 3000;
+const port = process.env.PORT || 3000;
 
-// Body parser middleware - MUST be before routes
+// CORS - Allow all origins for now
+app.use(cors({
+  origin: '*',
+  credentials: true
+}));
+
+// Body parser middleware
 app.use(express.json());
-app.use(cors())
 
-// Debug middleware to check if body is being parsed
-// app.use((req, res, next) => {
-//     console.log('Request Method:', req.method);
-//     console.log('Request URL:', req.url);
-//     console.log('Request Body:', req.body);
-//     console.log('Content-Type:', req.get('Content-Type'));
-//     next();
-// });
+// Log all requests
+app.use((req, res, next) => {
+    console.log(`${new Date().toISOString()} - ${req.method} ${req.url}`);
+    next();
+});
 
-mongoose
-  .connect(process.env.DATABASE_URL)
-  .then(() => console.log("Mongo connected"))
-  .catch((error) => console.log("Failed to connect", error));
+// Health check route
+app.get('/health', (req, res) => {
+  res.json({ 
+    status: 'ok', 
+    mongodb: mongoose.connection.readyState === 1 ? 'connected' : 'disconnected',
+    timestamp: new Date().toISOString()
+  });
+});
 
+// MongoDB Connection Function
+const connectDB = async () => {
+  try {
+    console.log('🔄 Attempting to connect to MongoDB...');
+    console.log('📍 Database URL exists:', !!process.env.DATABASE_URL);
+    
+    // WAIT for the connection before proceeding
+    await mongoose.connect(process.env.DATABASE_URL, {
+      serverSelectionTimeoutMS: 30000,
+      socketTimeoutMS: 45000,
+    });
+    
+    console.log("✅ MongoDB connected successfully");
+    console.log("🔗 Connection state:", mongoose.connection.readyState);
+  } catch (error) {
+    console.error("❌ MongoDB connection error:", error.message);
+    console.error("Full error:", error);
+    process.exit(1); // Exit if we can't connect
+  }
+};
+
+// Connect to MongoDB FIRST
+await connectDB();
+
+// ONLY set up routes AFTER MongoDB is connected
 app.use('/users', usersRoute);
 app.use('/products', productsRoute);
 app.use('/cart', validateJWT, cartRoute);
 app.use('/subscribe', subscribersRoute);
 app.use('/orders', orderRoute);
 
+// 404 handler
+app.use((req, res) => {
+  res.status(404).json({ message: `Route ${req.url} not found` });
+});
+
+// Global error handler
+app.use((err, req, res, next) => {
+  console.error('❌ Server Error:', err);
+  res.status(500).json({ 
+    message: 'Internal server error',
+    error: process.env.NODE_ENV === 'development' ? err.message : 'An error occurred'
+  });
+});
+
+// Start server ONLY after MongoDB is connected
 app.listen(port, () => {
-    console.log(`Server is running at port ${port}`);
+    console.log(`🚀 Server is running on port ${port}`);
+    console.log(`🔗 MongoDB state: ${mongoose.connection.readyState === 1 ? 'Connected' : 'Disconnected'}`);
 });
