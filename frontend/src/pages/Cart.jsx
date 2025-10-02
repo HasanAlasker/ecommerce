@@ -102,13 +102,13 @@ export default function Cart() {
             </div>
             <div className="ctaCard" style={{ width: "100%" }}>
               <button
-                disabled={isCheckingOut}
+                disabled={isCheckingOut || isClearing}
                 className={!isCheckingOut ? "square mid" : "square mid disSeq"}
                 onClick={handleCheckout}
               >
                 {!isCheckingOut ? "Confirm" : "Confirming..."}
               </button>
-              <button className={!isClearing?"square secSq mid":"square secSq disSeq mid" } onClick={handleClear}>
+              <button disabled={isCheckingOut || isClearing} className={!isClearing?"square secSq mid":"square secSq disSeq mid" } onClick={handleClear}>
                 {!isClearing ? "Clear cart" : "Clearing Cart..."}
               </button>
             </div>

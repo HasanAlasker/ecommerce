@@ -8,6 +8,7 @@ const CartProvider = ({ children }) => {
   const [cart, setCart] = useState(null);
   const [isInitialized, setIsInitialized] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [isAddingToCart, setIsAddingToCart] = useState(false);
 
   // Fetch cart from API
   const fetchCart = async () => {
@@ -35,6 +36,7 @@ const CartProvider = ({ children }) => {
 
   // Add item to cart
   const addToCart = async (productId, quantity = 1) => {
+    setIsAddingToCart(true);
     if (!token) return false;
 
     try {
@@ -55,6 +57,8 @@ const CartProvider = ({ children }) => {
     } catch (error) {
       console.error("Failed to add to cart:", error);
       return false;
+    } finally {
+      setIsAddingToCart(false);
     }
   };
 
@@ -127,36 +131,36 @@ const CartProvider = ({ children }) => {
   };
 
   const checkout = async (userId) => {
-  if (!token) return false;
+    if (!token) return false;
 
-  try {
-    const response = await fetch(`${BASE_URL}/cart/checkout`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-      body: JSON.stringify({ userId }),
-    });
+    try {
+      const response = await fetch(`${BASE_URL}/cart/checkout`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ userId }),
+      });
 
-    const data = await response.json();
+      const data = await response.json();
 
-    if (response.ok) {
-      await fetchCart(); // Refresh cart
-      return { success: true, message: data.message };
-    } else {
-      // Return the error with out of stock details
-      return { 
-        success: false, 
-        message: data.message,
-        outOfStockItems: data.outOfStockItems 
-      };
+      if (response.ok) {
+        await fetchCart(); // Refresh cart
+        return { success: true, message: data.message };
+      } else {
+        // Return the error with out of stock details
+        return {
+          success: false,
+          message: data.message,
+          outOfStockItems: data.outOfStockItems,
+        };
+      }
+    } catch (error) {
+      console.error("Failed to checkout:", error);
+      return { success: false, message: "Checkout failed" };
     }
-  } catch (error) {
-    console.error("Failed to checkout:", error);
-    return { success: false, message: "Checkout failed" };
-  }
-};
+  };
 
   // Initialize cart on mount
   useEffect(() => {
@@ -170,6 +174,7 @@ const CartProvider = ({ children }) => {
     totalItems: cart?.totalItems || 0,
     isInitialized,
     loading,
+    isAddingToCart,
     addToCart,
     updateQuantity,
     removeFromCart,

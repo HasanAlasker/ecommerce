@@ -101,7 +101,7 @@ export default function Card({
   const [editStock, setEditStock] = useState(stock || "");
   const [editImage, setEditImage] = useState(image || "");
   const { user, token } = useAuth();
-  const { addToCart, removeFromCart } = useCart();
+  const { addToCart, removeFromCart, isAddingToCart  } = useCart();
 
   const handleSave = async () => {
     if (!editName || !editPrice || !editStock) {
@@ -215,9 +215,10 @@ export default function Card({
       return;
     }
 
-    setIsLoading(true);
+    // Don't use setIsLoading here - let the global state handle it
     try {
-      const success = await addToCart(id, 1); // Add quantity as second param
+      setIsLoading(true)
+      const success = await addToCart(id, 1);
       if (success) {
         alert("Added to cart!");
       } else {
@@ -226,16 +227,14 @@ export default function Card({
     } catch (error) {
       console.error("Error adding to cart:", error);
       alert("Error adding to cart");
-    } finally {
-      setIsLoading(false);
     }
+    setIsLoading(false)
   };
 
   const handleRemove = async (id) => {
-    setIsLoading(true);
-    setIsRemoving(true)
+    setIsRemoving(true);
     try {
-      const success = await removeFromCart(id); // Add quantity as second param
+      const success = await removeFromCart(id);
       if (success) {
         alert("Removed from cart!");
       } else {
@@ -245,10 +244,10 @@ export default function Card({
       console.error("Error removing from cart:", error);
       alert("Error removing from cart");
     } finally {
-      setIsLoading(false);
-      setIsRemoving(false)
+      setIsRemoving(false);
     }
   };
+
 
   const quantityOptions = [];
   for (let i = 1; i <= Math.min(stock || 10, 10); i++) {
@@ -409,25 +408,28 @@ export default function Card({
     }
     return false;
   };
-
-  const renderPrimaryButton = () => {
+ const renderPrimaryButton = () => {
     if (cardTypes.CUSTOMER_PRODUCT) {
+      const isDisabled = disableAddToCart() || isAddingToCart; // Use global loading state
       return (
         <button
-          className={(disableAddToCart() || isLoading) ? "disBtn small" : "priBtn small"}
-          disabled={disableAddToCart()||isLoading}
+          className={isDisabled ? "disBtn small" : "priBtn small"}
+          disabled={isDisabled}
           onClick={() => handleAddToCart(id)}
         >
-          {disableAddToCart() ? "Out of stock" : !isLoading ? "Add to cart" : "Adding to cart..."}
-          
+          {disableAddToCart() ? "Out of stock" : isLoading ? "Adding..." : "Add to cart"}
         </button>
       );
     }
 
     if (cardTypes.CUSTOMER_CART) {
       return (
-        <button className={!isRemoving ?"priBtn small" : "priBtn small disBtn"} disabled={isRemoving} onClick={() => handleRemove(id)}>
-          {!isRemoving ?"Remove" : "Removing..."}
+        <button
+          className={!isRemoving ? "priBtn small" : "priBtn small disBtn"}
+          disabled={isRemoving}
+          onClick={() => handleRemove(id)}
+        >
+          {!isRemoving ? "Remove" : "Removing..."}
         </button>
       );
     }
