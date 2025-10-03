@@ -1,7 +1,11 @@
-import('dotenv/config');
+import("dotenv/config");
 import usersModel from "../models/usersModel.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
+
+export const getAllUsers = async () => {
+  return await usersModel.find();
+};
 
 export const register = async ({
   fullName,
@@ -25,9 +29,9 @@ export const register = async ({
     address,
     // role will use default 'user' from schema
   });
-  
+
   const savedUser = await newUser.save();
-  
+
   // Create user object without password - INCLUDE ROLE
   const userResponse = {
     id: savedUser._id,
@@ -35,18 +39,18 @@ export const register = async ({
     email: savedUser.email,
     phone: savedUser.phone,
     address: savedUser.address,
-    role: savedUser.role // ADD THIS LINE
+    role: savedUser.role, // ADD THIS LINE
   };
 
-  return { 
-    data: generateJWT({ 
-      id: savedUser._id, 
-      fullName: savedUser.fullName, 
+  return {
+    data: generateJWT({
+      id: savedUser._id,
+      fullName: savedUser.fullName,
       email: savedUser.email,
-      role: savedUser.role // ADD ROLE TO JWT
-    }), 
+      role: savedUser.role, // ADD ROLE TO JWT
+    }),
     user: userResponse,
-    statusCode: 200 
+    statusCode: 200,
   };
 };
 
@@ -70,15 +74,15 @@ export const login = async ({ email, password }) => {
     email: findUser.email,
     phone: findUser.phone,
     address: findUser.address,
-    role: findUser.role // ADD THIS LINE
+    role: findUser.role, // ADD THIS LINE
   };
 
   return {
-    data: generateJWT({ 
-      id: findUser._id, 
-      fullName: findUser.fullName, 
+    data: generateJWT({
+      id: findUser._id,
+      fullName: findUser.fullName,
       email: findUser.email,
-      role: findUser.role // ADD ROLE TO JWT
+      role: findUser.role, // ADD ROLE TO JWT
     }),
     user: userResponse,
     statusCode: 200,
