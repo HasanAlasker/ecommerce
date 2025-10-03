@@ -3,6 +3,16 @@ import { login, register } from "../services/userServices.js";
 
 const router = express.Router();
 
+router.get('/', async (req, res) => {
+  try {
+    const users = await getAllUsers();
+    res.status(200).json(users);
+  } catch (error) {
+    console.error("Get all users error:", error);
+    res.status(500).json({ error: "Internal server error", details: error.message });
+  }
+});
+
 router.post("/register", async (req, res) => {
   try {
     const { fullName, email, password, phone, address } = req.body;
