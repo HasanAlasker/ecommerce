@@ -72,24 +72,42 @@ function Nav({ onMenuOpen }) {
               </a>
             )}
             {user && user.role === "admin" && (
-              <a href="/orders">
-                <div
-                  className="secBtn"
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: ".5rem",
-                  }}
-                >
-                  <span className="priColor extraSmall">Orders</span>
-                  <span className="material-symbols-outlined priColor smallIcon">
-                    receipt
-                  </span>
-                  {orderCount >= 1 && (
-                    <div className="notification">{orderCount}</div>
-                  )}
-                </div>
-              </a>
+              <>
+                {" "}
+                <a href="/orders">
+                  <div
+                    className="secBtn"
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: ".5rem",
+                    }}
+                  >
+                    <span className="priColor extraSmall">Orders</span>
+                    <span className="material-symbols-outlined priColor smallIcon">
+                      receipt
+                    </span>
+                    {orderCount >= 1 && (
+                      <div className="notification">{orderCount}</div>
+                    )}
+                  </div>
+                </a>
+                <a href="/users">
+                  <div
+                    className="secBtn"
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: ".5rem",
+                    }}
+                  >
+                    <span className="priColor extraSmall">Users</span>
+                    <span className="material-symbols-outlined priColor smallIcon">
+                      people
+                    </span>
+                  </div>
+                </a>
+              </>
             )}
             {user && user.role === "user" && (
               <a href="/cart">
@@ -133,12 +151,12 @@ function Nav({ onMenuOpen }) {
               </button>
             )}
           </div>
-          <span
-            className="material-symbols-outlined priColor menu"
-            onClick={onMenuOpen}
-          >
-            dehaze
-          </span>
+          <div onClick={onMenuOpen} className="menuBox">
+            <span className="material-symbols-outlined priColor menu">
+              dehaze
+            </span>
+            {(orderCount >= 1 || (cart && cart.totalItems >= 1)) && <div className="smallNoti">.</div>}
+          </div>
         </div>
       </nav>
     </>

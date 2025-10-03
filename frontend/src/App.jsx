@@ -15,6 +15,7 @@ import OrderProvider from "./context/OrderProvider";
 import { useState } from "react";
 import Menu from "./components/Menu";
 import ScrollToTop from "./components/ScrollToTop";
+import Users from "./pages/Users";
 
 function App() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -46,6 +47,7 @@ function App() {
 
               <Route element={<AdminRoute />}>
                 <Route path="/orders" element={<Orders />} />
+                <Route path="/users" element={<Users />} />
               </Route>
             </Routes>
             <Footer></Footer>

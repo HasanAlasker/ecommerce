@@ -44,24 +44,34 @@ function Menu({ isOpen, onClose }) {
           )}
 
           {user && user.role === "admin" && (
-            <a href="/orders" onClick={handleLinkClick}>
-              <span className="material-symbols-outlined secColor xLarge">
-                receipt
-              </span>
-              <span>Orders</span>
-              {orderCount >= 1 && (
-                <div
-                  className="circle"
-                  style={{
-                    marginLeft: "auto",
-                    background: "white",
-                    color: "var(--rgb)",
-                  }}
-                >
-                  {orderCount}
-                </div>
-              )}
-            </a>
+            <>
+              {" "}
+              <a href="/orders" onClick={handleLinkClick}>
+                <span className="material-symbols-outlined secColor xLarge">
+                  receipt
+                </span>
+                <span>Orders</span>
+                {orderCount >= 1 && (
+                  <div
+                    className="circle"
+                    style={{
+                      marginLeft: "auto",
+                      background: "white",
+                      color: "var(--rgb)",
+                    }}
+                  >
+                    {orderCount}
+                  </div>
+                )}
+              </a>
+              <hr />
+              <a href="/users" onClick={handleLinkClick}>
+                <span className="material-symbols-outlined secColor xLarge">
+                  people
+                </span>
+                <span>Users</span>
+              </a>
+            </>
           )}
 
           {user && user.role === "user" && (

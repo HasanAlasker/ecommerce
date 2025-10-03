@@ -117,6 +117,25 @@ nav {
   align-items: center;
   gap: 0.5rem;
 }
+.menuBox{
+  position: relative;
+}
+.smallNoti{
+  position: absolute;
+  width: 1rem;
+  height: 1rem;
+  background-color: var(--rgb);
+  border-radius: 50%;
+  z-index: 100;
+  display: flex;
+  justify-content: center;
+  border: solid 2px var(--white);
+  align-items: center;
+  color: var(--rgb);
+  top: 0;
+  right: 0;
+  transform: translate(30%, -10%);
+}
 
 /* ------------------ cart ---------------- */
 
@@ -1489,6 +1508,9 @@ nav {
     display: flex;
   }
   .menu {
+    display: none;
+  }
+  .menuBox{
     display: none;
   }
 }
