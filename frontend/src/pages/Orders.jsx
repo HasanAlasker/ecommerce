@@ -2,6 +2,7 @@ import { useAuth } from "../context/AuthContext";
 import { BASE_URL } from "../constants/baseUrl";
 import { useEffect, useState } from "react";
 import OrderCard from "../components/OrderCard";
+import Spinner from "../components/Spinner";
 
 export default function Orders() {
   const [orders, setOrders] = useState([]);
@@ -47,7 +48,7 @@ export default function Orders() {
   }
 
   if (loading) {
-    return <h2 style={{ textAlign: "center" }} className="alone" >Loading orders...</h2>;
+    return <Spinner size="lg"></Spinner>
   }
 
   if (error) {

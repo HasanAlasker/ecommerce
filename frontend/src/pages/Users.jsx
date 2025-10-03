@@ -2,13 +2,16 @@ import React, { useEffect, useState } from "react";
 import { BASE_URL } from "../constants/baseUrl";
 import UserCard from "../components/UserCard";
 import SearchBar from "../components/SearchBar";
+import Spinner from "../components/Spinner";
 
 export default function Users() {
   const [users, setUsers] = useState([]);
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
 
   useEffect(() => {
     const fetchUsers = async () => {
+      setLoading(true);
       try {
         const response = await fetch(`${BASE_URL}/users`);
 
@@ -22,10 +25,15 @@ export default function Users() {
         console.error("Error fetching users:", error);
         setError(true);
       }
+      setLoading(false);
     };
 
     fetchUsers();
   }, []);
+
+  if (loading) {
+    return <Spinner size="lg"></Spinner>;
+  }
 
   if (error) {
     return (

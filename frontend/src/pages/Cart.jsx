@@ -3,6 +3,7 @@ import { BASE_URL } from "../constants/baseUrl";
 import Card from "../components/Card";
 import { useCart } from "../context/CartContext";
 import { useState } from "react";
+import Spinner from "../components/Spinner";
 
 export default function Cart() {
   const { token, user } = useAuth();
@@ -10,6 +11,7 @@ export default function Cart() {
 
   const [isCheckingOut, setIsCheckingOut] = useState(false);
   const [isClearing, setIsClearing] = useState(false);
+
 
   const handleCheckout = async () => {
     setIsCheckingOut(true);
@@ -52,6 +54,11 @@ export default function Cart() {
     }
     setIsClearing(false);
   };
+
+  if(loading){
+        return <Spinner size="lg"></Spinner>
+
+  }
 
   if (!token) {
     return <h1 className="xLarge center alone">Please login first!</h1>;

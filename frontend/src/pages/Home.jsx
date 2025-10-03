@@ -5,16 +5,19 @@ import Banner from "../components/Banner";
 import { BASE_URL } from "../constants/baseUrl";
 import { useAuth } from "../context/AuthContext";
 import OrderCard from "../components/OrderCard";
+import Spinner from "../components/Spinner";
 
 export default function Home() {
   const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
   const { user } = useAuth();
 
-  const isAdmin = user && user.role === 'admin';
+  const isAdmin = user && user.role === "admin";
 
   useEffect(() => {
     const fetchProducts = async () => {
+      setLoading(true);
       try {
         const response = await fetch(`${BASE_URL}/products`);
 
@@ -28,30 +31,44 @@ export default function Home() {
         console.error("Error fetching products:", error);
         setError(true);
       }
+      setLoading(false);
     };
 
     fetchProducts();
   }, []);
 
+   if (loading) {
+    return (
+      <div style={{ 
+        display: 'flex', 
+        justifyContent: 'center', 
+        alignItems: 'center', 
+        minHeight: '400px' 
+      }}>
+        <Spinner size="lg" />
+      </div>
+    );
+  }
+
   const handleProductAdded = (newProduct) => {
-    setProducts(prev => [...prev, newProduct]);
+    setProducts((prev) => [...prev, newProduct]);
   };
 
   const handleProductUpdated = (updatedProduct) => {
-    setProducts(prev => 
-      prev.map(product => 
+    setProducts((prev) =>
+      prev.map((product) =>
         product._id === updatedProduct._id ? updatedProduct : product
       )
     );
   };
 
   const handleProductDeleted = (productId) => {
-    setProducts(prev => prev.filter(product => product._id !== productId));
+    setProducts((prev) => prev.filter((product) => product._id !== productId));
   };
 
   if (error) {
     return (
-      <h2 style={{textAlign:'center', color:'#a39e9e'}} className="alone">
+      <h2 style={{ textAlign: "center", color: "#a39e9e" }} className="alone">
         Something went wrong, please try refreshing the page!
       </h2>
     );
@@ -61,22 +78,18 @@ export default function Home() {
     <>
       <Banner />
       {products.length === 0 && !isAdmin ? (
-        <h2 style={{textAlign:'center', color:'#a39e9e'}} className="alone">
+        <h2 style={{ textAlign: "center", color: "#a39e9e" }} className="alone">
           There are no products to show!
         </h2>
       ) : (
         <div className="card-cont" id="collection">
           {isAdmin && (
-            <Card 
-              addCard 
-              isAdmin 
-              onProductAdded={handleProductAdded}
-            />
+            <Card addCard isAdmin onProductAdded={handleProductAdded} />
           )}
           {products.map((p) => (
-            <Card 
-              key={p._id} 
-              id={p._id} 
+            <Card
+              key={p._id}
+              id={p._id}
               {...p}
               isAdmin={isAdmin}
               onSave={handleProductUpdated}
