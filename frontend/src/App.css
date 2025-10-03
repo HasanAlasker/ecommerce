@@ -70,6 +70,162 @@ a {
   font-weight: bold;
 }
 
+/* ------------------ searchbar ---------------- */
+
+.search-container {
+  width: 100%;
+  margin: 2rem auto;
+}
+
+.search-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  background: var(--white);
+  border-radius: 50px;
+  padding: 0.5rem 1.5rem;
+  box-shadow: 0 4px 15px rgba(255, 56, 93, 0.15);
+  transition: all 0.3s ease;
+}
+
+.search-wrapper:focus-within {
+  box-shadow: 0 6px 25px rgba(255, 56, 93, 0.25);
+  transform: translateY(-2px);
+}
+
+.search-icon {
+  color: var(--rgb);
+  font-size: 1.2rem;
+  margin-right: 0.75rem;
+  pointer-events: none;
+}
+
+.search-input {
+  flex: 1;
+  border: none;
+  outline: none;
+  font-size: 1rem;
+  padding: 0.75rem 0;
+  background: transparent;
+  color: var(--black);
+  font-family: inherit;
+}
+
+.search-input::placeholder {
+  color: var(--gray);
+  opacity: 0.7;
+}
+
+.search-button {
+  background: var(--primary);
+  border: none;
+  color: var(--white);
+  padding: 0.6rem 1.5rem;
+  border-radius: 50px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-left: 0.5rem;
+  white-space: nowrap;
+}
+
+.search-button:hover {
+  background: var(--hoverPri);
+  transform: scale(1.05);
+}
+
+.search-button:active {
+  transform: scale(0.98);
+}
+
+/* Clear button (optional) */
+.clear-button {
+  background: transparent;
+  border: none;
+  color: var(--gray);
+  font-size: 1.2rem;
+  cursor: pointer;
+  padding: 0.5rem;
+  margin-left: 0.25rem;
+  display: none;
+  transition: color 0.2s ease;
+}
+
+.clear-button.visible {
+  display: block;
+}
+
+.clear-button:hover {
+  color: var(--rgb);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .search-wrapper {
+    padding: 0.4rem 1rem;
+  }
+
+  .search-input {
+    font-size: 0.95rem;
+    padding: 0.6rem 0;
+  }
+
+  .search-button {
+    padding: 0.5rem 1.2rem;
+    font-size: 0.9rem;
+  }
+
+  .search-icon {
+    font-size: 1.1rem;
+    margin-right: 0.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .search-container {
+    margin: 1.5rem auto;
+  }
+
+  .search-wrapper {
+    padding: 0.3rem 0.75rem;
+    flex-wrap: wrap;
+  }
+
+  .search-input {
+    font-size: 0.9rem;
+    min-width: 0;
+    flex: 1 1 auto;
+  }
+
+  .search-button {
+    padding: 0.4rem 0.8rem;
+    font-size: 0.8rem;
+    margin-left: 0.25rem;
+    flex-shrink: 0;
+    flex: 1;
+  }
+
+  .search-icon {
+    flex-shrink: 0;
+  }
+
+  .clear-button {
+    flex-shrink: 0;
+  }
+}
+
+@media (max-width: 360px) {
+  .search-button {
+    padding: 0.4rem 0.6rem;
+    font-size: 0.75rem;
+  }
+
+  .search-wrapper {
+    padding: 0.25rem 0.5rem;
+  }
+}
+
 /* ------------------ Navbar ---------------- */
 
 nav {
@@ -117,10 +273,10 @@ nav {
   align-items: center;
   gap: 0.5rem;
 }
-.menuBox{
+.menuBox {
   position: relative;
 }
-.smallNoti{
+.smallNoti {
   position: absolute;
   width: 1rem;
   height: 1rem;
@@ -1315,7 +1471,6 @@ nav {
   }
 }
 
-
 /* --------------------------------------------menu---------------------------------------------------- */
 
 /* Hamburger Menu Styles */
@@ -1510,7 +1665,7 @@ nav {
   .menu {
     display: none;
   }
-  .menuBox{
+  .menuBox {
     display: none;
   }
 }
