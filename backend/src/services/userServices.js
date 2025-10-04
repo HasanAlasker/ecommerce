@@ -7,6 +7,37 @@ export const getAllUsers = async () => {
   return await usersModel.find();
 };
 
+// For user to edit his profile
+export const editUser = async ({ id, data }) => {
+  try {
+    const updatedUser = await usersModel.findByIdAndUpdate(id, data, {
+      new: true,
+      runValidators: true,
+    });
+    if (!updatedUser) {
+      throw new Error("user not found");
+    }
+
+    return updatedUser;
+  } catch (error) {
+    throw new Error(`Failed to edit user: ${error.message}`);
+  }
+};
+
+// For user to delete his account
+export const deleteUser = async ({ id, data }) => {
+  try {
+    const deletedUser = await usersModel.findByIdAndDelete(id);
+    if (!deletedUser) {
+      throw new Error("user not found");
+    }
+
+    return deletedUser;
+  } catch (error) {
+    throw new Error(`Failed to delete user: ${error.message}`);
+  }
+};
+
 export const register = async ({
   fullName,
   email,

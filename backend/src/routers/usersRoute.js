@@ -1,5 +1,6 @@
 import express from "express";
-import { getAllUsers, login, register } from "../services/userServices.js";
+import { deleteUser, editUser, getAllUsers, login, register } from "../services/userServices.js";
+import validateJWT from "../middlewares/validateJWT.js";
 
 const router = express.Router();
 
@@ -9,6 +10,53 @@ router.get('/', async (req, res) => {
     res.status(200).json(users);
   } catch (error) {
     console.error("Get all users error:", error);
+    res.status(500).json({ error: "Internal server error", details: error.message });
+  }
+});
+
+router.put("/:id", async (req, res) => {
+ try {
+     const id = req.params.id;
+     const data = req.body;
+ 
+     if (!id) {
+       return res.status(400).json({ error: "user ID is required" });
+     }
+ 
+     if (!data || Object.keys(data).length === 0) {
+       return res.status(400).json({ error: "Update data is required" });
+     }
+ 
+     const updatedUser = await editUser({ id, data });
+     
+     if (!updatedUser) {
+       return res.status(404).json({ error: "user not found" });
+     }
+ 
+     res.status(200).json(updatedUser);
+   } catch (error) {
+     console.error("Edit user error:", error);
+     res.status(500).json({ error: "Internal server error", details: error.message });
+   }
+})
+
+router.delete('/:id', async (req, res) => {
+  try {
+    const id = req.params.id;
+
+    if (!id) {
+      return res.status(400).json({ error: "User ID is required" });
+    }
+
+    const deletedUser = await deleteUser({ id });
+    
+    if (!deletedUser) {
+      return res.status(404).json({ error: "user not found" });
+    }
+
+    res.status(200).json({ message: "user deleted successfully", user: deletedUser });
+  } catch (error) {
+    console.error("Delete user error:", error);
     res.status(500).json({ error: "Internal server error", details: error.message });
   }
 });
