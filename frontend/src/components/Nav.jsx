@@ -110,24 +110,42 @@ function Nav({ onMenuOpen }) {
               </>
             )}
             {user && user.role === "user" && (
-              <a href="/cart">
-                <div
-                  className="secBtn"
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: ".5rem",
-                  }}
-                >
-                  <span className="priColor extraSmall">Cart</span>
-                  <span className="material-symbols-outlined priColor smallIcon">
-                    shopping_cart
-                  </span>
-                  {cart && cart.totalItems >= 1 && (
-                    <div className="notification">{cart.totalItems}</div>
-                  )}
-                </div>
-              </a>
+              <>
+                <a href="/cart">
+                  <div
+                    className="secBtn"
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: ".5rem",
+                    }}
+                  >
+                    <span className="priColor extraSmall">Cart</span>
+                    <span className="material-symbols-outlined priColor smallIcon">
+                      shopping_cart
+                    </span>
+                    {cart && cart.totalItems >= 1 && (
+                      <div className="notification">{cart.totalItems}</div>
+                    )}
+                  </div>
+                </a>
+
+                <a href="/profile">
+                  <div
+                    className="secBtn"
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: ".5rem",
+                    }}
+                  >
+                    <span className="priColor extraSmall">Profile</span>
+                    <span className="material-symbols-outlined priColor smallIcon">
+                      account_circle
+                    </span>
+                  </div>
+                </a>
+              </>
             )}
 
             {user && (
@@ -155,7 +173,9 @@ function Nav({ onMenuOpen }) {
             <span className="material-symbols-outlined priColor menu">
               dehaze
             </span>
-            {(orderCount >= 1 || (cart && cart.totalItems >= 1)) && <div className="smallNoti">.</div>}
+            {(orderCount >= 1 || (cart && cart.totalItems >= 1)) && (
+              <div className="smallNoti">.</div>
+            )}
           </div>
         </div>
       </nav>

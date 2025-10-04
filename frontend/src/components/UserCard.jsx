@@ -1,7 +1,24 @@
-import React from "react";
+import React, { useState } from "react";
 
-export default function UserCard({ userName, phone, address, email, role }) {
-    const Role = role.toUpperCase()
+export default function UserCard({
+  userName,
+  phone,
+  address,
+  email,
+  role,
+  myProfile = false,
+}) {
+  const Role = role.toUpperCase();
+  const [loading, setIsLoading] =  useState(false)
+
+  const handleEdit = () => {
+    setIsLoading(true)
+    setIsLoading(false)
+  }
+
+  const handleDelete = () => {
+
+  }
   return (
     <>
       <div className="productCard noMaxWidth">
@@ -12,6 +29,24 @@ export default function UserCard({ userName, phone, address, email, role }) {
           <h2 className="small gray">{email}</h2>
           {role === "admin" && <h2 className="small priColor">{Role}</h2>}
         </div>
+        {myProfile && (
+          <div className="ctaCard">
+            <button
+              className="priBtn small"
+              disabled={loading}
+              onClick={handleEdit}
+            >
+              Edit
+            </button>
+            <button
+              className="secBtn small"
+              onClick={handleDelete}
+              disabled={loading}
+            >
+              Delete
+            </button>
+          </div>
+        )}
       </div>
     </>
   );

@@ -16,6 +16,7 @@ import { useState } from "react";
 import Menu from "./components/Menu";
 import ScrollToTop from "./components/ScrollToTop";
 import Users from "./pages/Users";
+import Profile from "./pages/Profile";
 
 function App() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -43,6 +44,7 @@ function App() {
 
               <Route element={<AuthRoute />}>
                 <Route path="/cart" element={<Cart />} />
+                <Route path="/profile" element={<Profile />} />
               </Route>
 
               <Route element={<AdminRoute />}>

@@ -31,6 +31,14 @@ function Menu({ isOpen, onClose }) {
             <span className="close-tag"></span>
           </i>
         </div>
+        <a href="/" onClick={handleLinkClick}>
+                <span className="material-symbols-outlined secColor xLarge">
+                  home
+                </span>
+                <span>Home</span>
+              </a>
+
+              <hr />
 
         {/* User Section */}
         <div className="menu-user-section">
@@ -75,24 +83,36 @@ function Menu({ isOpen, onClose }) {
           )}
 
           {user && user.role === "user" && (
-            <a href="/cart" onClick={handleLinkClick}>
-              <span className="material-symbols-outlined secColor xLarge">
-                shopping_cart
-              </span>
-              <span>Cart</span>
-              {cart && cart.totalItems >= 1 && (
-                <div
-                  className="circle"
-                  style={{
-                    marginLeft: "auto",
-                    background: "white",
-                    color: "var(--rgb)",
-                  }}
-                >
-                  {cart.totalItems}
-                </div>
-              )}
-            </a>
+            <>
+
+              <a href="/cart" onClick={handleLinkClick}>
+                <span className="material-symbols-outlined secColor xLarge">
+                  shopping_cart
+                </span>
+                <span>Cart</span>
+                {cart && cart.totalItems >= 1 && (
+                  <div
+                    className="circle"
+                    style={{
+                      marginLeft: "auto",
+                      background: "white",
+                      color: "var(--rgb)",
+                    }}
+                  >
+                    {cart.totalItems}
+                  </div>
+                )}
+              </a>
+
+              <hr />
+
+              <a href="/profile" onClick={handleLinkClick}>
+                <span className="material-symbols-outlined secColor xLarge">
+                  account_circle
+                </span>
+                <span>Profile</span>
+              </a>
+            </>
           )}
 
           {user && (

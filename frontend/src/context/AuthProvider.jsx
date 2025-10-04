@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from "react"
 import { AuthContext } from './AuthContext'
 import { BASE_URL } from '../constants/baseUrl'
+import Spinner from "../components/Spinner"
 
 const AuthProvider = ({children}) => {
     const [user, setUser] = useState(null)
@@ -225,7 +226,7 @@ const AuthProvider = ({children}) => {
 
     // Don't render children until auth is initialized
     if (!isInitialized) {
-        return <div>Loading...</div>
+        return <Spinner size="lg"/>
     }
 
     return(
