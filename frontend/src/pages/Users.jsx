@@ -63,7 +63,8 @@ export default function Users() {
         {users.map((user) => (
           <UserCard
             key={user._id}
-            userName={user.fullName}
+            id={user._id}
+            fullName={user.fullName}
             phone={user.phone}
             email={user.email}
             address={user.address}

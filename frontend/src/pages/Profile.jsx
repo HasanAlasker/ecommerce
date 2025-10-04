@@ -1,21 +1,40 @@
 import React from "react";
 import { useAuth } from "../context/AuthContext";
+import { useNavigate } from "react-router-dom";
 import UserCard from "../components/UserCard";
 
 export default function Profile() {
-  const { user, token, loading } = useAuth();
+  const { user, token, loading, logout, updateUser } = useAuth();
+  const navigate = useNavigate();
 
   if (loading) {
-    return <Spinner size="lg"></Spinner>;
+    return (
+      <div style={{ textAlign: "center", marginTop: "4rem" }}>
+        <h2 className="large gray">Loading...</h2>
+      </div>
+    );
   }
 
-  if (!token) {
+  if (!token || !user) {
     return (
       <h2 style={{ textAlign: "center", color: "#a39e9e" }} className="alone">
         Please login first!
       </h2>
     );
   }
+
+  const handleSave = (updatedUser) => {
+    // Update the user in AuthContext
+    if (updateUser) {
+      updateUser(updatedUser);
+    }
+  };
+
+  const handleDelete = () => {
+    // Logout and redirect to home page after account deletion
+    logout();
+    navigate("/");
+  };
 
   return (
     <div>
@@ -33,13 +52,16 @@ export default function Profile() {
         }}
       >
         <UserCard
-          key={user._id}
-          userName={user.fullName}
+          key={user.id}
+          id={user.id}
+          fullName={user.fullName}
           phone={user.phone}
           email={user.email}
           address={user.address}
           role={user.role}
           myProfile
+          onSave={handleSave}
+          onDelete={handleDelete}
         />
       </div>
     </div>

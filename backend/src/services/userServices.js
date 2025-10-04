@@ -25,7 +25,7 @@ export const editUser = async ({ id, data }) => {
 };
 
 // For user to delete his account
-export const deleteUser = async ({ id, data }) => {
+export const deleteUser = async ({ id }) => {
   try {
     const deletedUser = await usersModel.findByIdAndDelete(id);
     if (!deletedUser) {
